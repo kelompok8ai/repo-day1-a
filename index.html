@@ -62,10 +62,15 @@
                   <span class="mega-menu__icon">🏛️</span>
                   <span><strong>GCG</strong><small>Tata kelola perusahaan</small></span>
                 </a>
+                <a href="#nasakah-dinas" class="mega-menu__item" role="menuitem">
+                  <span class="mega-menu__icon">📝</span>
+                  <span><strong>Nasakah Dinas</strong><small>Resume memo terintegrasi</small></span>
+                </a>
               </div>
             </div>
           </li>
           <li><a href="#layanan" class="nav__link">Layanan</a></li>
+          <li><a href="#nasakah-dinas" class="nav__link">Nasakah Dinas</a></li>
           <li><a href="#berita" class="nav__link">Berita</a></li>
           <li><a href="#press-release" class="nav__link">Press Release</a></li>
           <li><a href="#media-center" class="nav__link">Media Center</a></li>
@@ -304,6 +309,61 @@
           <div class="service-card reveal reveal--delay"><div class="service-card__icon">📊</div><h3>Media Monitoring</h3><p>Pemantauan liputan media dan sentimen publik.</p></div>
           <div class="service-card reveal reveal--delay-2"><div class="service-card__icon">✨</div><h3>Brand Management</h3><p>Pengelolaan identitas dan citra merek.</p></div>
           <div class="service-card reveal"><div class="service-card__icon">🚨</div><h3>Crisis Communication</h3><p>Penanganan komunikasi dalam situasi krisis.</p></div>
+          <a href="#nasakah-dinas" class="service-card service-card--featured reveal" data-open-nasakah>
+            <div class="service-card__icon">📝</div>
+            <h3>Resume Memo Nasakah Dinas</h3>
+            <p>Pembuatan naskah dinas terintegrasi regulasi SK/SE, BI, OJK & UU.</p>
+            <span class="service-card__badge">Baru</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Nasakah Dinas -->
+    <section class="section section--nasakah" id="nasakah-dinas" aria-labelledby="nasakah-title">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-label">Administrasi Korporasi</span>
+          <h2 id="nasakah-title" class="section-title">Resume Memo Nasakah Dinas</h2>
+          <p class="section-desc">Sistem pembuatan resume memo nasakah dinas terintegrasi untuk seluruh divisi Bank Sumut, dengan validasi otomatis terhadap ketentuan internal (SK/SE), regulasi Bank Indonesia, OJK, dan peraturan perundang-undangan yang berlaku.</p>
+        </div>
+
+        <div class="nasakah-features reveal">
+          <div class="nasakah-feature glass-card">
+            <span class="nasakah-feature__icon">🏦</span>
+            <strong>SK & SE Bank Sumut</strong>
+            <span>Pedoman tata naskah, GCG, AML, SOP kredit, keamanan IT</span>
+          </div>
+          <div class="nasakah-feature glass-card">
+            <span class="nasakah-feature__icon">🏛️</span>
+            <strong>Regulasi BI & OJK</strong>
+            <span>PBI, POJK, SEOJK terkait perbankan dan LJK</span>
+          </div>
+          <div class="nasakah-feature glass-card">
+            <span class="nasakah-feature__icon">⚖️</span>
+            <strong>Peraturan UU RI</strong>
+            <span>UU Perbankan, OJK, APUPPT, PDP, ITE, dan PP terkait</span>
+          </div>
+          <div class="nasakah-feature glass-card">
+            <span class="nasakah-feature__icon">✅</span>
+            <strong>Validasi Kepatuhan</strong>
+            <span>Pemeriksaan otomatis checklist regulasi</span>
+          </div>
+        </div>
+
+        <div class="nasakah-wizard glass-card reveal">
+          <div class="nasakah-steps" id="nasakahSteps" role="tablist" aria-label="Langkah pembuatan nasakah dinas"></div>
+          <div class="nasakah-content" id="nasakahContent"></div>
+          <div class="nasakah-nav">
+            <button type="button" class="btn btn--outline" id="nasPrev" hidden>Kembali</button>
+            <button type="button" class="btn btn--primary" id="nasNext">Lanjutkan</button>
+          </div>
+        </div>
+
+        <div class="regulation-library reveal" id="regulationLibrarySection">
+          <h3 class="regulation-library__title">Pustaka Regulasi Terintegrasi</h3>
+          <p class="regulation-library__desc">Daftar regulasi yang terhubung dengan sistem pembuatan nasakah dinas.</p>
+          <div class="regulation-library__grid" id="regulationLibrary"></div>
         </div>
       </div>
     </section>
@@ -668,6 +728,7 @@
         <div class="footer__links">
           <h4>Informasi</h4>
           <ul>
+            <li><a href="#nasakah-dinas">Nasakah Dinas</a></li>
             <li><a href="#berita">Berita</a></li>
             <li><a href="#press-release">Press Release</a></li>
             <li><a href="#media-center">Media Center</a></li>

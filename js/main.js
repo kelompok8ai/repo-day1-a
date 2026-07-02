@@ -1,5 +1,7 @@
 /* Bank Sumut Corporate Secretary – Main JavaScript */
 
+import { initNasakahDinas } from './nasakah-dinas.js';
+
 const NEWS_DATA = [
   {
     id: 1,
@@ -488,6 +490,8 @@ function init() {
 
   initTabs('.media-tab', renderMedia);
   initTabs('.awards-tab', renderAwards);
+
+  initNasakahDinas();
 
   window.addEventListener('scroll', () => {
     handleScroll();

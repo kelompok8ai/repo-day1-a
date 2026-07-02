@@ -16,6 +16,22 @@ Landing page resmi Corporate Secretary Bidang Public Relations Bank Sumut. Diban
 - Mobile-first responsive design
 - WCAG accessibility (skip link, ARIA labels, keyboard navigation)
 - SEO meta tags
+- **Resume Memo Nasakah Dinas** – Wizard pembuatan naskah dinas terintegrasi regulasi
+
+## Fitur Nasakah Dinas
+
+Modul pembuatan resume memo nasakah dinas untuk seluruh divisi Bank Sumut:
+
+- **Wizard 5 langkah**: Identitas → Isi Memo → Regulasi → Validasi → Preview
+- **18 divisi** Bank Sumut terdaftar
+- **Pustaka regulasi terintegrasi**:
+  - Bank Sumut: SK & SE (tata naskah, GCG, AML, SOP kredit, IT, humas)
+  - Bank Indonesia: PBI, PADG, SE BI
+  - OJK: POJK, SEOJK (GCG, digital banking, AML, syariah, risiko)
+  - UU RI: Perbankan, OJK, APUPPT, PDP, ITE, PP
+- **Rekomendasi regulasi otomatis** berdasarkan topik & divisi
+- **Validasi kepatuhan** checklist otomatis
+- **Preview & cetak PDF** format resmi naskah dinas
 
 ## Tech Stack
 
