@@ -3,7 +3,8 @@ import { cookies } from "next/headers";
 import { SESSION_COOKIE } from "@/lib/auth";
 import type { SessionUser } from "@/lib/auth";
 import { createMemorandum } from "@/lib/db/queries";
-import { saveMemorandumFile } from "@/lib/storage";
+import { saveMemorandumPdf } from "@/lib/storage";
+import { validatePdfFile } from "@/lib/pdf";
 
 export const runtime = "nodejs";
 
@@ -24,24 +25,32 @@ export async function POST(request: Request) {
   const form = await request.formData();
   const file = form.get("file") as File | null;
   const number = form.get("number") as string;
-  let fileMeta = { fileName: null as string | null, filePath: null as string | null, fileMimeType: null as string | null };
 
-  if (file && file.size > 0) {
-    fileMeta = await saveMemorandumFile(file, number);
+  if (!file || file.size === 0) {
+    return NextResponse.json({ error: "File PDF wajib diupload" }, { status: 400 });
   }
+
+  const pdfError = validatePdfFile(file);
+  if (pdfError) {
+    return NextResponse.json({ error: pdfError }, { status: 400 });
+  }
+
+  const saved = await saveMemorandumPdf(file, number);
+  const note = (form.get("content") as string)?.trim();
+  const content = saved.extractedText || note || `[Memorandum PDF: ${saved.fileName}]`;
 
   const item = createMemorandum({
     number,
     title: form.get("title") as string,
-    content: (form.get("content") as string) || `[Scan memorandum: ${fileMeta.fileName}]`,
+    content,
     memoDate: form.get("memoDate") as string,
     proposerDivisi: session.divisi ?? "Divisi Pengusul",
     submittedByUserId: session.id,
     status: "uploaded",
     urgency: "normal",
-    fileName: fileMeta.fileName,
-    filePath: fileMeta.filePath,
-    fileMimeType: fileMeta.fileMimeType,
+    fileName: saved.fileName,
+    filePath: saved.filePath,
+    fileMimeType: saved.fileMimeType,
     isRead: false,
     submittedAt: new Date().toISOString(),
     createdAt: new Date().toISOString(),

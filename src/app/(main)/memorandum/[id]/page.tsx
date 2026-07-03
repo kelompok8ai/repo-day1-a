@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/Badge";
 import { MemorandumActions } from "@/components/memorandum/MemorandumActions";
 import { AiReviewEditor } from "@/components/memorandum/AiReviewEditor";
 import { WorkflowStepper, MarkAsRead } from "@/components/memorandum/WorkflowStepper";
+import { PdfViewer } from "@/components/memorandum/PdfViewer";
 import { ReadIndicator } from "@/components/memorandum/ReadIndicator";
 import { getMemorandumById } from "@/lib/db/queries";
 import { getSession } from "@/lib/auth";
@@ -43,6 +44,9 @@ export default async function MemorandumDetailPage({
 
   const statusInfo = MEMORANDUM_STATUS[memo.status];
   const regulatoryRefs = parseRegulatoryRefs(memo.regulatoryReferences);
+  const isPdf =
+    memo.fileMimeType === "application/pdf" ||
+    !!memo.fileName?.toLowerCase().endsWith(".pdf");
 
   return (
     <>
@@ -79,25 +83,38 @@ export default async function MemorandumDetailPage({
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <FileText className="h-4 w-4" />
-                    Dokumen Memorandum (Scan/File)
+                    Dokumen Memorandum (PDF)
+                    {isPdf && (
+                      <Badge className="bg-red-100 text-red-700">PDF</Badge>
+                    )}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="flex items-center justify-between gap-4">
-                  <div>
-                    <p className="font-medium text-slate-900">{memo.fileName}</p>
-                    {memo.smdDocumentId && (
-                      <p className="mt-1 flex items-center gap-1 text-xs text-blue-600">
-                        <Link2 className="h-3 w-3" />
-                        SMD: {memo.smdDocumentId}
-                      </p>
-                    )}
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <p className="font-medium text-slate-900">{memo.fileName}</p>
+                      {memo.smdDocumentId && (
+                        <p className="mt-1 flex items-center gap-1 text-xs text-blue-600">
+                          <Link2 className="h-3 w-3" />
+                          SMD: {memo.smdDocumentId}
+                        </p>
+                      )}
+                    </div>
+                    <a
+                      href={`/api/memorandum/${memo.id}/file`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-emerald-700 hover:bg-emerald-50"
+                    >
+                      Download PDF
+                    </a>
                   </div>
-                  <a
-                    href={`/api/memorandum/${memo.id}/file`}
-                    className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-emerald-700 hover:bg-emerald-50"
-                  >
-                    Download File
-                  </a>
+                  {isPdf && memo.filePath && (
+                    <PdfViewer
+                      url={`/api/memorandum/${memo.id}/file`}
+                      title={memo.fileName}
+                    />
+                  )}
                 </CardContent>
               </Card>
             )}

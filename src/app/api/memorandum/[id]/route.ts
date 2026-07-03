@@ -23,7 +23,7 @@ export async function PATCH(
 
   switch (action) {
     case "generate_ai": {
-      const result = generateAiSummary(memoId);
+      const result = await generateAiSummary(memoId);
       return NextResponse.json(result);
     }
     case "update_ai_review": {

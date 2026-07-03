@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createMemorandum } from "@/lib/db/queries";
-import { saveMemorandumFile } from "@/lib/storage";
+import { saveMemorandumPdf } from "@/lib/storage";
+import { validatePdfFile } from "@/lib/pdf";
 
 export const runtime = "nodejs";
 
@@ -8,32 +9,40 @@ export async function POST(request: Request) {
   const contentType = request.headers.get("content-type") ?? "";
   const year = new Date().getFullYear();
   const random = Math.floor(Math.random() * 900) + 100;
-  const memoNumber = `MEM/${year}/${random}`;
 
   if (contentType.includes("multipart/form-data")) {
     const form = await request.formData();
     const file = form.get("file") as File | null;
-    let fileMeta = { fileName: null as string | null, filePath: null as string | null, fileMimeType: null as string | null };
+    const customNumber = (form.get("number") as string)?.trim();
+    const memoNumber = customNumber || `MEM/${year}/${random}`;
 
-    if (file && file.size > 0) {
-      const saved = await saveMemorandumFile(file, memoNumber);
-      fileMeta = saved;
+    if (!file || file.size === 0) {
+      return NextResponse.json({ error: "File PDF wajib diupload" }, { status: 400 });
     }
 
+    const pdfError = validatePdfFile(file);
+    if (pdfError) {
+      return NextResponse.json({ error: pdfError }, { status: 400 });
+    }
+
+    const saved = await saveMemorandumPdf(file, memoNumber);
+    const note = (form.get("content") as string)?.trim();
     const content =
-      (form.get("content") as string) ||
-      (fileMeta.fileName ? `[Dokumen upload: ${fileMeta.fileName}]` : "");
+      saved.extractedText ||
+      note ||
+      `[Memorandum PDF: ${saved.fileName}]`;
 
     const item = createMemorandum({
       number: memoNumber,
       title: form.get("title") as string,
       content,
+      memoDate: (form.get("memoDate") as string) || null,
       proposerDivisi: form.get("proposerDivisi") as string,
       status: "uploaded",
       urgency: (form.get("urgency") as string) || "normal",
-      fileName: fileMeta.fileName,
-      filePath: fileMeta.filePath,
-      fileMimeType: fileMeta.fileMimeType,
+      fileName: saved.fileName,
+      filePath: saved.filePath,
+      fileMimeType: saved.fileMimeType,
       isRead: false,
       submittedAt: new Date().toISOString(),
       createdAt: new Date().toISOString(),
@@ -41,17 +50,5 @@ export async function POST(request: Request) {
     return NextResponse.json(item, { status: 201 });
   }
 
-  const body = await request.json();
-  const item = createMemorandum({
-    number: memoNumber,
-    title: body.title,
-    content: body.content,
-    proposerDivisi: body.proposerDivisi,
-    status: "uploaded",
-    urgency: body.urgency || "normal",
-    isRead: false,
-    submittedAt: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
-  });
-  return NextResponse.json(item, { status: 201 });
+  return NextResponse.json({ error: "Gunakan upload file PDF" }, { status: 400 });
 }

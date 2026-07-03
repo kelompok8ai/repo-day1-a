@@ -319,14 +319,20 @@ export function updateMemorandum(id: number, data: Partial<typeof schema.memoran
   return db.update(schema.memorandum).set(data).where(eq(schema.memorandum.id, id)).returning().get();
 }
 
-export function generateAiSummary(id: number) {
+export async function generateAiSummary(id: number) {
   const db = getDb();
   const memo = getMemorandumById(id);
   if (!memo) return null;
 
   const knowledgeDocs = db.select().from(schema.knowledgeDocuments).all();
-  const fileContent = memo.filePath ? readMemorandumFileAsText(memo.filePath) : null;
-  const analysis = buildAiAnalysis(memo, knowledgeDocs, fileContent);
+  const fileContent = memo.filePath
+    ? await readMemorandumFileAsText(memo.filePath)
+    : null;
+  const analysis = buildAiAnalysis(
+    memo,
+    knowledgeDocs,
+    fileContent ?? memo.content
+  );
 
   return db
     .update(schema.memorandum)
