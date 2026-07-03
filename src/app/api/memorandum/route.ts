@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createMemorandum } from "@/lib/db/queries";
+import { createMemorandum, generateAiSummary, getMemorandumById } from "@/lib/db/queries";
 import { saveMemorandumPdf } from "@/lib/storage";
 import { validatePdfFile } from "@/lib/pdf";
 
@@ -47,6 +47,14 @@ export async function POST(request: Request) {
       submittedAt: new Date().toISOString(),
       createdAt: new Date().toISOString(),
     });
+
+    const autoAnalyze = form.get("autoAnalyze") === "true";
+    if (autoAnalyze) {
+      await generateAiSummary(item.id);
+      const updated = getMemorandumById(item.id);
+      return NextResponse.json(updated ?? item, { status: 201 });
+    }
+
     return NextResponse.json(item, { status: 201 });
   }
 
