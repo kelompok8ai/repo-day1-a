@@ -23,7 +23,7 @@ export function MemorandumTrendChart({ data }: { data: DataItem[] }) {
           formatter={(value) => [value, "Memorandum"]}
           contentStyle={{ borderRadius: 8, border: "1px solid #e2e8f0" }}
         />
-        <Bar dataKey="jumlah" fill="#059669" radius={[4, 4, 0, 0]} />
+        <Bar dataKey="jumlah" fill="#f58220" radius={[4, 4, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
   );

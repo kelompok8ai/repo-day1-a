@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Plus, Sparkles } from "lucide-react";
 import { Header } from "@/components/layout/Header";
+import { DashboardHero } from "@/components/brand/DashboardHero";
 import { Badge } from "@/components/ui/Badge";
 import { ReadIndicator } from "@/components/memorandum/ReadIndicator";
 import { MemorandumUploadPanel } from "@/components/memorandum/MemorandumUploadPanel";
@@ -21,6 +22,10 @@ export default async function MemorandumPage() {
         subtitle="Kelola memorandum, analisa AI, dan alur persetujuan"
         session={session ?? undefined}
       />
+      <DashboardHero
+        title="Memorandum Digital Bank Sumut"
+        subtitle="Upload, analisa AI, dan kelola alur persetujuan memorandum Corporate Secretary."
+      />
       <div className="space-y-6 p-6">
         <MemorandumUploadPanel />
 
@@ -40,7 +45,7 @@ export default async function MemorandumPage() {
           </div>
           <Link
             href="/dashboard/memorandum/new"
-            className="inline-flex items-center gap-2 rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-800"
+            className="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-navy-800"
           >
             <Plus className="h-4 w-4" />
             Buat Memorandum Baru
@@ -78,7 +83,7 @@ export default async function MemorandumPage() {
                     <td className="px-4 py-3">
                       <Link
                         href={`/dashboard/memorandum/${memo.id}`}
-                        className="font-mono text-xs font-medium text-emerald-700 hover:underline"
+                        className="font-mono text-xs font-medium text-brand-600 hover:underline"
                       >
                         {memo.number}
                       </Link>
@@ -86,7 +91,7 @@ export default async function MemorandumPage() {
                     <td className="px-4 py-3">
                       <Link
                         href={`/dashboard/memorandum/${memo.id}`}
-                        className={`hover:text-emerald-700 ${
+                        className={`hover:text-brand-600 ${
                           !memo.isRead ? "font-bold text-slate-900" : "font-medium text-slate-900"
                         }`}
                       >
@@ -104,7 +109,7 @@ export default async function MemorandumPage() {
                     </td>
                     <td className="px-4 py-3">
                       {memo.aiSummary ? (
-                        <span className="inline-flex items-center gap-1 text-xs text-emerald-600">
+                        <span className="inline-flex items-center gap-1 text-xs text-brand-600">
                           <Sparkles className="h-3 w-3" />
                           {memo.aiConfidence}%
                         </span>

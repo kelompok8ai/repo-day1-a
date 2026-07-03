@@ -45,9 +45,9 @@ export default function PengusulKirimPage() {
       />
       <div className="mx-auto max-w-2xl p-6">
         {success ? (
-          <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-6 text-center">
-            <p className="font-semibold text-emerald-800">Memorandum PDF berhasil dikirim!</p>
-            <p className="mt-1 text-sm text-emerald-600">Mengalihkan ke riwayat...</p>
+          <div className="rounded-xl border border-brand-200 bg-brand-50 p-6 text-center">
+            <p className="font-semibold text-navy-800">Memorandum PDF berhasil dikirim!</p>
+            <p className="mt-1 text-sm text-brand-600">Mengalihkan ke riwayat...</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-5 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -60,7 +60,7 @@ export default function PengusulKirimPage() {
                   name="number"
                   required
                   placeholder="MEM/2026/0001"
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-emerald-500"
+                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand-500"
                 />
               </div>
               <div>
@@ -71,7 +71,7 @@ export default function PengusulKirimPage() {
                   name="memoDate"
                   type="date"
                   required
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-emerald-500"
+                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand-500"
                 />
               </div>
             </div>
@@ -82,7 +82,7 @@ export default function PengusulKirimPage() {
                 name="title"
                 required
                 placeholder="Contoh: Usulan Perubahan Suku Bunga Deposito"
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-emerald-500"
+                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand-500"
               />
             </div>
 
@@ -96,7 +96,7 @@ export default function PengusulKirimPage() {
                 name="content"
                 rows={2}
                 placeholder="Catatan jika hardcopy sudah diserahkan ke CorpSec..."
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-emerald-500"
+                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand-500"
               />
             </div>
 
@@ -107,7 +107,7 @@ export default function PengusulKirimPage() {
             <button
               type="submit"
               disabled={loading || !pdfFile}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-medium text-white hover:bg-emerald-800 disabled:opacity-50"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-800 disabled:opacity-50"
             >
               <Send className="h-4 w-4" />
               {loading ? "Mengirim PDF..." : "Submit PDF ke Corporate Secretary"}

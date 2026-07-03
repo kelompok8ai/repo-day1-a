@@ -28,7 +28,7 @@ export function MemorandumStatusChart({ data }: { data: DataItem[] }) {
           nameKey="name"
         >
           {filtered.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={entry.fill || "#10b981"} />
+            <Cell key={`cell-${index}`} fill={entry.fill || "#f58220"} />
           ))}
         </Pie>
         <Tooltip formatter={(value) => [value, "Jumlah"]} />

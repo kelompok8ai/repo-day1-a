@@ -41,7 +41,7 @@ export default function MediaPage() {
                     </div>
                   </div>
                   <div className="flex flex-col items-start gap-2 sm:items-end">
-                    <Badge className="bg-emerald-100 text-emerald-700">{article.category}</Badge>
+                    <Badge className="bg-brand-100 text-brand-600">{article.category}</Badge>
                     <span className={`text-xs font-medium ${SENTIMENT[article.sentiment]?.color}`}>
                       {SENTIMENT[article.sentiment]?.label}
                     </span>

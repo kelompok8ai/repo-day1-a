@@ -50,9 +50,10 @@ export function MemorandumUploadPanel() {
 
   return (
     <div id="upload-memorandum">
-    <Card className="border-emerald-200 bg-gradient-to-br from-emerald-50/80 to-white">
+    <Card className="overflow-hidden border-brand-200 shadow-md">
+      <div className="h-1.5 gradient-brand-accent" />
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-emerald-900">
+        <CardTitle className="flex items-center gap-2 text-navy-900">
           <Upload className="h-5 w-5" />
           Upload Memorandum PDF untuk Analisa AI
         </CardTitle>
@@ -70,7 +71,7 @@ export function MemorandumUploadPanel() {
                 name="title"
                 required
                 placeholder="Contoh: Usulan Perubahan Suku Bunga Deposito"
-                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500"
+                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500"
               />
             </div>
             <div>
@@ -80,7 +81,7 @@ export function MemorandumUploadPanel() {
               <input
                 name="number"
                 placeholder="Auto-generate jika kosong"
-                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500"
+                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500"
               />
             </div>
             <div>
@@ -88,7 +89,7 @@ export function MemorandumUploadPanel() {
               <input
                 name="memoDate"
                 type="date"
-                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500"
+                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500"
               />
             </div>
             <div>
@@ -99,14 +100,14 @@ export function MemorandumUploadPanel() {
                 name="proposerDivisi"
                 required
                 placeholder="Contoh: Divisi IT & Digital Banking"
-                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500"
+                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500"
               />
             </div>
             <div>
               <label className="mb-1 block text-sm font-medium text-slate-700">Urgensi</label>
               <select
                 name="urgency"
-                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500"
+                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500"
               >
                 <option value="normal">Normal</option>
                 <option value="high">Tinggi</option>
@@ -125,7 +126,7 @@ export function MemorandumUploadPanel() {
               name="content"
               rows={2}
               placeholder="Catatan tambahan selain isi PDF..."
-              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500"
+              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500"
             />
           </div>
 
@@ -136,7 +137,7 @@ export function MemorandumUploadPanel() {
           <button
             type="submit"
             disabled={loading || !pdfFile}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-700 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-800 disabled:opacity-50 sm:w-auto"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-500 px-4 py-3 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-50 sm:w-auto"
           >
             {loading ? (
               <>

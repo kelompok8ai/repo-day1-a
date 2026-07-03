@@ -22,8 +22,8 @@ export function ReportTrendChart({ data }: { data: DataItem[] }) {
         <YAxis tick={{ fontSize: 12, fill: "#64748b" }} />
         <Tooltip contentStyle={{ borderRadius: 8, border: "1px solid #e2e8f0" }} />
         <Legend />
-        <Bar dataKey="memorandum" name="Memorandum" fill="#059669" radius={[4, 4, 0, 0]} />
-        <Bar dataKey="rapat" name="Rapat" fill="#2563eb" radius={[4, 4, 0, 0]} />
+        <Bar dataKey="memorandum" name="Memorandum" fill="#f58220" radius={[4, 4, 0, 0]} />
+        <Bar dataKey="rapat" name="Rapat" fill="#15345c" radius={[4, 4, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
   );
@@ -46,7 +46,7 @@ export function DivisiChart({ data }: { data: { divisi: string; count: number }[
           tick={{ fontSize: 11, fill: "#64748b" }}
         />
         <Tooltip contentStyle={{ borderRadius: 8, border: "1px solid #e2e8f0" }} />
-        <Bar dataKey="count" name="Memorandum" fill="#059669" radius={[0, 4, 4, 0]} />
+        <Bar dataKey="count" name="Memorandum" fill="#15345c" radius={[0, 4, 4, 0]} />
       </BarChart>
     </ResponsiveContainer>
   );
@@ -54,7 +54,7 @@ export function DivisiChart({ data }: { data: { divisi: string; count: number }[
 
 export function SentimentChart({ data }: { data: { sentiment: string; count: number }[] }) {
   const colors: Record<string, string> = {
-    Positif: "#10b981",
+    Positif: "#f58220",
     Netral: "#64748b",
     Negatif: "#ef4444",
   };
@@ -70,7 +70,7 @@ export function SentimentChart({ data }: { data: { sentiment: string; count: num
           dataKey="count"
           name="Artikel"
           radius={[4, 4, 0, 0]}
-          fill="#059669"
+          fill="#f58220"
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           shape={(props: any) => {
             const { x, y, width, height, payload } = props;
@@ -80,7 +80,7 @@ export function SentimentChart({ data }: { data: { sentiment: string; count: num
                 y={y}
                 width={width}
                 height={height}
-                fill={colors[payload.sentiment] || "#059669"}
+                fill={colors[payload.sentiment] || "#f58220"}
                 rx={4}
               />
             );

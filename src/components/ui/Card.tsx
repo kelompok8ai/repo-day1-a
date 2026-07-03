@@ -63,17 +63,18 @@ export function StatCard({
   subtitle,
   icon,
   trend,
-  accent = "emerald",
+  accent = "brand",
 }: {
   title: string;
   value: string | number;
   subtitle?: string;
   icon: React.ReactNode;
   trend?: string;
-  accent?: "emerald" | "blue" | "amber" | "red" | "purple";
+  accent?: "brand" | "navy" | "blue" | "amber" | "red" | "purple";
 }) {
   const accents = {
-    emerald: "bg-emerald-50 text-emerald-600",
+    brand: "bg-brand-50 text-brand-600",
+    navy: "bg-navy-50 text-navy-700",
     blue: "bg-blue-50 text-blue-600",
     amber: "bg-amber-50 text-amber-600",
     red: "bg-red-50 text-red-600",
@@ -87,7 +88,7 @@ export function StatCard({
           <p className="text-sm text-slate-500">{title}</p>
           <p className="mt-1 text-2xl font-bold text-slate-900">{value}</p>
           {subtitle && <p className="mt-1 text-xs text-slate-400">{subtitle}</p>}
-          {trend && <p className="mt-2 text-xs font-medium text-emerald-600">{trend}</p>}
+          {trend && <p className="mt-2 text-xs font-medium text-brand-600">{trend}</p>}
         </div>
         <div className={cn("rounded-lg p-2.5", accents[accent])}>{icon}</div>
       </CardContent>

@@ -24,7 +24,7 @@ export default function LaporanPage() {
             title="Total Memorandum"
             value={dashboard.memoStats.total}
             icon={<span className="text-lg">📄</span>}
-            accent="emerald"
+            accent="brand"
           />
           <StatCard
             title="Rapat"
@@ -44,7 +44,7 @@ export default function LaporanPage() {
             value={dashboard.memoStats.approved}
             subtitle={`${dashboard.memoStats.rejected} ditolak`}
             icon={<span className="text-lg">✅</span>}
-            accent="emerald"
+            accent="brand"
           />
         </div>
 
@@ -67,7 +67,7 @@ export default function LaporanPage() {
                 data={report.memoByStatus.map((s, i) => ({
                   name: s.status,
                   value: s.count,
-                  fill: ["#94a3b8", "#a855f7", "#f59e0b", "#10b981", "#ef4444"][i],
+                  fill: ["#94a3b8", "#a855f7", "#f59e0b", "#f58220", "#ef4444"][i],
                 }))}
               />
             </CardContent>
@@ -118,7 +118,7 @@ export default function LaporanPage() {
                     <tr key={row.kpi} className="border-b border-slate-50">
                       <td className="py-2.5 pr-4 font-medium text-slate-900">{row.kpi}</td>
                       <td className="py-2.5 pr-4 text-slate-600">{row.target}</td>
-                      <td className="py-2.5 text-emerald-700">{row.current}</td>
+                      <td className="py-2.5 text-brand-600">{row.current}</td>
                     </tr>
                   ))}
                 </tbody>

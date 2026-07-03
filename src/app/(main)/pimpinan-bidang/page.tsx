@@ -49,7 +49,7 @@ export default async function PimpinanBidangPage() {
             <CardContent className="flex items-center gap-3 py-4">
               <ReadIndicator isRead={true} />
               <div>
-                <p className="text-2xl font-bold text-emerald-600">
+                <p className="text-2xl font-bold text-brand-600">
                   {items.length - unreadCount}
                 </p>
                 <p className="text-xs text-slate-500">Sudah Dibaca</p>
@@ -116,7 +116,7 @@ export default async function PimpinanBidangPage() {
                       </div>
                       <Link
                         href={`/pimpinan-bidang/${memo.id}`}
-                        className="text-xs font-medium text-emerald-700 hover:underline"
+                        className="text-xs font-medium text-brand-600 hover:underline"
                       >
                         Lihat detail →
                       </Link>

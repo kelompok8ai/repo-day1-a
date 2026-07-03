@@ -78,7 +78,7 @@ export function MemorandumWorkflowPanel({
             type="button"
             onClick={() => action("send_to_pimpinan")}
             disabled={!!loading}
-            className="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-medium text-white"
+            className="rounded-lg bg-brand-500 px-4 py-2 text-sm font-medium text-white"
           >
             Kirim ke Pimpinan Bidang
           </button>
@@ -119,7 +119,7 @@ export function MemorandumWorkflowPanel({
             <button
               type="button"
               onClick={() => action("finalize_to_pengusul", { comment, approved: true })}
-              className="rounded-lg bg-emerald-700 px-4 py-2 text-sm text-white"
+              className="rounded-lg bg-brand-500 px-4 py-2 text-sm text-white"
             >
               Setujui &amp; Kembalikan ke Pengusul
             </button>
@@ -154,7 +154,7 @@ export function MemorandumWorkflowPanel({
               <button
                 type="button"
                 onClick={() => setShowSign(true)}
-                className="w-full rounded-lg bg-emerald-700 px-4 py-2 text-sm text-white"
+                className="w-full rounded-lg bg-brand-500 px-4 py-2 text-sm text-white"
               >
                 Setujui + Tanda Tangan Digital
               </button>
@@ -222,7 +222,7 @@ export function MemorandumWorkflowPanel({
           <button
             type="button"
             onClick={() => action("terima")}
-            className="rounded-lg bg-emerald-700 px-4 py-2 text-sm text-white"
+            className="rounded-lg bg-brand-500 px-4 py-2 text-sm text-white"
           >
             Terima Memorandum
           </button>
@@ -283,7 +283,7 @@ export function MemorandumWorkflowPanel({
               <button
                 type="button"
                 onClick={() => setShowSign(true)}
-                className="w-full rounded-lg bg-emerald-700 px-4 py-2 text-sm text-white"
+                className="w-full rounded-lg bg-brand-500 px-4 py-2 text-sm text-white"
               >
                 Setujui + Tanda Tangan Digital
               </button>

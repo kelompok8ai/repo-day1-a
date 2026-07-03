@@ -22,14 +22,14 @@ export default function SlaPage() {
             value={`${compliance}%`}
             subtitle="Target ≥95%"
             icon={<span className="text-lg">📊</span>}
-            accent={compliance >= 95 ? "emerald" : "amber"}
+            accent={compliance >= 95 ? "brand" : "amber"}
           />
           <StatCard
             title="On Track"
             value={onTrack}
             subtitle={`dari ${total} memorandum`}
             icon={<span className="text-lg">✅</span>}
-            accent="emerald"
+            accent="brand"
           />
           <StatCard
             title="Terlambat"

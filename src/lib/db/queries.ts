@@ -112,7 +112,7 @@ export function getDashboardStats() {
   const memoByStatus = [
     { name: "Review Pimpinan", value: memoStats.pending, fill: "#f59e0b" },
     { name: "Analisa AI", value: memoStats.aiReview, fill: "#a855f7" },
-    { name: "Disetujui", value: memoStats.approved, fill: "#10b981" },
+    { name: "Disetujui", value: memoStats.approved, fill: "#f58220" },
     { name: "Ditolak", value: memoStats.rejected, fill: "#ef4444" },
   ];
 

@@ -19,8 +19,8 @@ export function WorkflowStepper({ status }: { status: string }) {
             <span
               className={cn(
                 "flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold",
-                isDone && "bg-emerald-500 text-white",
-                isActive && "bg-emerald-700 text-white ring-2 ring-emerald-200",
+                isDone && "bg-brand-500 text-white",
+                isActive && "bg-navy-800 text-white ring-2 ring-brand-400",
                 !isDone && !isActive && "bg-slate-100 text-slate-500"
               )}
             >
@@ -28,8 +28,8 @@ export function WorkflowStepper({ status }: { status: string }) {
             </span>
             <span
               className={cn(
-                isActive && "font-semibold text-emerald-800",
-                isDone && "text-emerald-700",
+                isActive && "font-semibold text-navy-900",
+                isDone && "text-brand-600",
                 !isDone && !isActive && "text-slate-500"
               )}
             >

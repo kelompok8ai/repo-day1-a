@@ -13,6 +13,7 @@ import {
   Plus,
 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
+import { DashboardHero } from "@/components/brand/DashboardHero";
 import { Card, CardContent, CardHeader, CardTitle, StatCard } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { MemorandumStatusChart } from "@/components/charts/MemorandumStatusChart";
@@ -37,14 +38,18 @@ export default async function DashboardPage() {
         subtitle="Ringkasan agenda, memorandum, dan notifikasi keputusan Pimpinan Bidang"
         session={session ?? undefined}
       />
+      <DashboardHero
+        title="Selamat Datang di CorpSec Bank Sumut"
+        subtitle="Kelola memorandum, agenda Direksi, dan alur persetujuan dalam satu platform terintegrasi."
+      />
       <div className="space-y-6 p-6">
         {/* Aksi Cepat CorpSec */}
         <div className="grid gap-4 sm:grid-cols-2">
           <Link href="/dashboard/memorandum/new">
-            <Card className="h-full border-emerald-200 transition hover:border-emerald-400 hover:shadow-md">
+            <Card className="h-full border-brand-200 transition hover:border-brand-400 hover:shadow-md">
               <CardContent className="flex items-center gap-4 py-5">
-                <div className="rounded-xl bg-emerald-100 p-3">
-                  <Upload className="h-7 w-7 text-emerald-700" />
+                <div className="rounded-xl bg-brand-100 p-3">
+                  <Upload className="h-7 w-7 text-brand-600" />
                 </div>
                 <div>
                   <p className="font-semibold text-slate-900">Upload Memorandum</p>
@@ -56,10 +61,10 @@ export default async function DashboardPage() {
             </Card>
           </Link>
           <Link href="/agenda/baru">
-            <Card className="h-full border-blue-200 transition hover:border-blue-400 hover:shadow-md">
+            <Card className="h-full border-navy-200 transition hover:border-navy-400 hover:shadow-md">
               <CardContent className="flex items-center gap-4 py-5">
-                <div className="rounded-xl bg-blue-100 p-3">
-                  <Plus className="h-7 w-7 text-blue-700" />
+                <div className="rounded-xl bg-navy-100 p-3">
+                  <Plus className="h-7 w-7 text-navy-700" />
                 </div>
                 <div>
                   <p className="font-semibold text-slate-900">Buat Jadwal & Agenda Direksi</p>
@@ -88,7 +93,7 @@ export default async function DashboardPage() {
                 <Link
                   key={memo.id}
                   href={`/dashboard/memorandum/${memo.id}`}
-                  className="block rounded-lg border border-orange-200 bg-white p-3 transition hover:border-emerald-300"
+                  className="block rounded-lg border border-orange-200 bg-white p-3 transition hover:border-brand-300"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div>
@@ -98,7 +103,7 @@ export default async function DashboardPage() {
                     <Badge
                       className={
                         memo.pimpinanDecision === "approved"
-                          ? "bg-emerald-100 text-emerald-800"
+                          ? "bg-brand-100 text-navy-800"
                           : "bg-red-100 text-red-700"
                       }
                     >
@@ -124,7 +129,7 @@ export default async function DashboardPage() {
             value={data.todayAgenda.length}
             subtitle={`${data.weekAgenda.length} agenda minggu ini`}
             icon={<Calendar className="h-5 w-5" />}
-            accent="emerald"
+            accent="brand"
           />
           <StatCard
             title="Menunggu Keputusan"
@@ -183,7 +188,7 @@ export default async function DashboardPage() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Agenda Hari Ini</CardTitle>
-              <Link href="/agenda" className="text-xs font-medium text-emerald-700 hover:underline">
+              <Link href="/agenda" className="text-xs font-medium text-brand-600 hover:underline">
                 Lihat semua →
               </Link>
             </CardHeader>
@@ -197,8 +202,8 @@ export default async function DashboardPage() {
                       key={item.id}
                       className="flex items-start gap-3 rounded-lg border border-slate-100 p-3"
                     >
-                      <div className="mt-0.5 rounded bg-emerald-50 p-2">
-                        <Calendar className="h-4 w-4 text-emerald-600" />
+                      <div className="mt-0.5 rounded bg-brand-50 p-2">
+                        <Calendar className="h-4 w-4 text-brand-600" />
                       </div>
                       <div className="min-w-0 flex-1">
                         <p className="font-medium text-slate-900">{item.title}</p>
@@ -224,7 +229,7 @@ export default async function DashboardPage() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Memorandum Menunggu Keputusan</CardTitle>
-              <Link href="/dashboard/memorandum" className="text-xs font-medium text-emerald-700 hover:underline">
+              <Link href="/dashboard/memorandum" className="text-xs font-medium text-brand-600 hover:underline">
                 Lihat semua →
               </Link>
             </CardHeader>
@@ -239,7 +244,7 @@ export default async function DashboardPage() {
                       <li key={memo.id}>
                         <Link
                           href={`/dashboard/memorandum/${memo.id}`}
-                          className="flex items-start gap-3 rounded-lg border border-slate-100 p-3 transition hover:border-emerald-200 hover:bg-emerald-50/50"
+                          className="flex items-start gap-3 rounded-lg border border-slate-100 p-3 transition hover:border-brand-200 hover:bg-brand-50/50"
                         >
                           <div className="min-w-0 flex-1">
                             <p className="font-medium text-slate-900">{memo.title}</p>
@@ -280,7 +285,7 @@ export default async function DashboardPage() {
                 <ul className="space-y-2">
                   {data.highUrgencyMemos.map((m) => (
                     <li key={m.id} className="text-sm">
-                      <Link href={`/dashboard/memorandum/${m.id}`} className="font-medium text-slate-900 hover:text-emerald-700">
+                      <Link href={`/dashboard/memorandum/${m.id}`} className="font-medium text-slate-900 hover:text-brand-600">
                         {m.title}
                       </Link>
                       <p className="text-xs text-slate-500">{m.number}</p>
@@ -305,7 +310,7 @@ export default async function DashboardPage() {
                 <ul className="space-y-2">
                   {data.aiReviewMemos.map((m) => (
                     <li key={m.id} className="text-sm">
-                      <Link href={`/dashboard/memorandum/${m.id}`} className="font-medium text-slate-900 hover:text-emerald-700">
+                      <Link href={`/dashboard/memorandum/${m.id}`} className="font-medium text-slate-900 hover:text-brand-600">
                         {m.title}
                       </Link>
                       <Badge className={`${MEMORANDUM_STATUS.ai_review.color} ml-2`}>
@@ -347,7 +352,7 @@ export default async function DashboardPage() {
                 <Newspaper className="h-4 w-4" />
                 Berita Bank Sumut
               </CardTitle>
-              <Link href="/media" className="text-xs font-medium text-emerald-700 hover:underline">
+              <Link href="/media" className="text-xs font-medium text-brand-600 hover:underline">
                 Media monitoring →
               </Link>
             </CardHeader>
@@ -394,7 +399,7 @@ export default async function DashboardPage() {
                         className={
                           notif.regulator === "OJK"
                             ? "bg-blue-100 text-blue-700"
-                            : "bg-emerald-100 text-emerald-700"
+                            : "bg-brand-100 text-brand-600"
                         }
                       >
                         {notif.regulator}
@@ -410,7 +415,7 @@ export default async function DashboardPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+              <CheckCircle2 className="h-4 w-4 text-brand-600" />
               Agenda Minggu Ini
             </CardTitle>
           </CardHeader>

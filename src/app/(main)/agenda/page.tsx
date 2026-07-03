@@ -24,7 +24,7 @@ export default async function AgendaPage() {
           <p className="text-sm text-slate-500">{items.length} agenda terdaftar</p>
           <Link
             href="/agenda/baru"
-            className="inline-flex items-center gap-2 rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-800"
+            className="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-navy-800"
           >
             <Plus className="h-4 w-4" />
             Buat Jadwal & Agenda Direksi
@@ -60,7 +60,7 @@ export default async function AgendaPage() {
                   className={
                     item.status === "scheduled"
                       ? "bg-blue-100 text-blue-700"
-                      : "bg-emerald-100 text-emerald-700"
+                      : "bg-brand-100 text-brand-600"
                   }
                 >
                   {item.status === "scheduled" ? "Terjadwal" : item.status}

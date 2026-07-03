@@ -20,8 +20,8 @@ export default function KnowledgePage() {
         <div className="grid gap-4 sm:grid-cols-2">
           <Card>
             <CardContent className="flex items-center gap-4">
-              <div className="rounded-lg bg-emerald-50 p-3">
-                <BookOpen className="h-6 w-6 text-emerald-600" />
+              <div className="rounded-lg bg-brand-50 p-3">
+                <BookOpen className="h-6 w-6 text-brand-600" />
               </div>
               <div>
                 <p className="text-2xl font-bold text-slate-900">{internal.length}</p>
@@ -48,7 +48,7 @@ export default function KnowledgePage() {
         ].map(({ title, items, icon: Icon }) => (
           <div key={title}>
             <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-slate-900">
-              <Icon className="h-5 w-5 text-emerald-600" />
+              <Icon className="h-5 w-5 text-brand-600" />
               {title}
             </h2>
             <div className="grid gap-3 md:grid-cols-2">
@@ -66,7 +66,7 @@ export default function KnowledgePage() {
                       <Badge
                         className={
                           doc.category === "internal"
-                            ? "bg-emerald-100 text-emerald-700"
+                            ? "bg-brand-100 text-brand-600"
                             : "bg-blue-100 text-blue-700"
                         }
                       >

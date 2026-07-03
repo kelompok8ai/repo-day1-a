@@ -53,13 +53,13 @@ export function MemorandumInbox({
                     <td className="px-4 py-3">
                       <Link
                         href={`${detailHrefPrefix}/${memo.id}`}
-                        className="font-mono text-xs text-emerald-700 hover:underline"
+                        className="font-mono text-xs text-brand-600 hover:underline"
                       >
                         {memo.number}
                       </Link>
                     </td>
                     <td className="px-4 py-3">
-                      <Link href={`${detailHrefPrefix}/${memo.id}`} className="font-medium hover:text-emerald-700">
+                      <Link href={`${detailHrefPrefix}/${memo.id}`} className="font-medium hover:text-brand-600">
                         {memo.title}
                       </Link>
                     </td>

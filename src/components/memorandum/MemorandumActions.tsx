@@ -66,7 +66,7 @@ export function MemorandumActions({
             type="button"
             onClick={() => action("send_to_pimpinan")}
             disabled={!!loading}
-            className="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-800 disabled:opacity-50"
+            className="rounded-lg bg-brand-500 px-4 py-2 text-sm font-medium text-white hover:bg-navy-800 disabled:opacity-50"
           >
             {loading === "send_to_pimpinan" ? "Mengirim..." : "Submit / Send ke Pimpinan Bidang"}
           </button>
@@ -94,7 +94,7 @@ export function MemorandumActions({
               <button
                 type="button"
                 onClick={() => setShowSign(true)}
-                className="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-800"
+                className="rounded-lg bg-brand-500 px-4 py-2 text-sm font-medium text-white hover:bg-navy-800"
               >
                 Approve + Tanda Tangan Digital
               </button>
@@ -164,7 +164,7 @@ export function MemorandumActions({
       {role === "corpsec" &&
         status === "returned_to_corpsec" &&
         pimpinanDecision === "approved" && (
-          <p className="text-xs text-emerald-700">
+          <p className="text-xs text-brand-600">
             Disetujui Pimpinan Bidang. Kirim ke Sekretaris Direksi untuk diterima.
           </p>
         )}

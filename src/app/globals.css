@@ -1,8 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --background: #f4f6f9;
+  --foreground: #0c2340;
+  --bsn-navy: #0c2340;
+  --bsn-navy-mid: #15345c;
+  --bsn-navy-light: #1e4976;
+  --bsn-orange: #f58220;
+  --bsn-orange-dark: #d96b10;
+  --bsn-orange-light: #fff4eb;
+  --bsn-surface: #ffffff;
+  --bsn-border: #e2e8f0;
 }
 
 @theme inline {
@@ -10,6 +18,29 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --color-navy-50: #eef2f7;
+  --color-navy-100: #d9e2ec;
+  --color-navy-200: #bcccdc;
+  --color-navy-300: #9fb3c8;
+  --color-navy-400: #627d98;
+  --color-navy-500: #486581;
+  --color-navy-600: #334e68;
+  --color-navy-700: #243b53;
+  --color-navy-800: #15345c;
+  --color-navy-900: #0c2340;
+  --color-navy-950: #071525;
+
+  --color-brand-50: #fff7ed;
+  --color-brand-100: #ffedd5;
+  --color-brand-200: #fed7aa;
+  --color-brand-300: #fdba74;
+  --color-brand-400: #fb923c;
+  --color-brand-500: #f58220;
+  --color-brand-600: #ea580c;
+  --color-brand-700: #c2410c;
+  --color-brand-800: #9a3412;
+  --color-brand-900: #7c2d12;
 }
 
 body {
@@ -19,5 +50,37 @@ body {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 transparent;
+  scrollbar-color: #bcccdc transparent;
+}
+
+/* Brand utilities */
+.btn-primary {
+  @apply rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2 disabled:opacity-50;
+}
+
+.btn-secondary {
+  @apply rounded-lg border border-navy-200 bg-white px-4 py-2.5 text-sm font-medium text-navy-800 transition hover:bg-navy-50;
+}
+
+.input-field {
+  @apply w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-200;
+}
+
+.card-brand {
+  @apply rounded-xl border border-slate-200/80 bg-white shadow-sm transition hover:shadow-md;
+}
+
+.gradient-navy {
+  background: linear-gradient(135deg, #0c2340 0%, #15345c 50%, #1e4976 100%);
+}
+
+.gradient-brand-accent {
+  background: linear-gradient(90deg, #f58220 0%, #fb923c 100%);
+}
+
+.text-gradient-brand {
+  background: linear-gradient(90deg, #f58220, #fdba74);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }

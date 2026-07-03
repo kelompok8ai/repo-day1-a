@@ -13,8 +13,8 @@ export const MEMORANDUM_STATUS: Record<string, { label: string; color: string }>
   board_review: { label: "Review Direksi/Komisaris", color: "bg-amber-100 text-amber-900" },
   returned_to_corpsec_board: { label: "Keputusan Board ke CorpSec", color: "bg-orange-100 text-orange-900" },
   returned_to_pengusul: { label: "Dikembalikan ke Pengusul", color: "bg-rose-100 text-rose-800" },
-  completed: { label: "Selesai", color: "bg-emerald-100 text-emerald-800" },
-  approved: { label: "Disetujui", color: "bg-emerald-100 text-emerald-800" },
+  completed: { label: "Selesai", color: "bg-brand-100 text-navy-800" },
+  approved: { label: "Disetujui", color: "bg-brand-100 text-navy-800" },
   rejected: { label: "Ditolak", color: "bg-red-100 text-red-700" },
   signed: { label: "Ditandatangani", color: "bg-blue-100 text-blue-800" },
 };
@@ -36,13 +36,13 @@ export const URGENCY: Record<string, { label: string; color: string }> = {
 };
 
 export const SLA_STATUS: Record<string, { label: string; color: string }> = {
-  on_track: { label: "On Track", color: "bg-emerald-100 text-emerald-700" },
+  on_track: { label: "On Track", color: "bg-brand-100 text-brand-600" },
   at_risk: { label: "Berisiko", color: "bg-amber-100 text-amber-700" },
   breached: { label: "Terlambat", color: "bg-red-100 text-red-700" },
 };
 
 export const SENTIMENT: Record<string, { label: string; color: string }> = {
-  positive: { label: "Positif", color: "text-emerald-600" },
+  positive: { label: "Positif", color: "text-brand-600" },
   neutral: { label: "Netral", color: "text-slate-600" },
   negative: { label: "Negatif", color: "text-red-600" },
 };

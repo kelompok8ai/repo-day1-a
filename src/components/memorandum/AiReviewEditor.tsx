@@ -83,7 +83,7 @@ export function AiReviewEditor({
         onChange={(e) => setSummary(e.target.value)}
         readOnly={!canEdit}
         rows={12}
-        className="w-full rounded-lg border border-slate-200 px-3 py-2 font-mono text-xs leading-relaxed outline-none focus:border-emerald-500 disabled:bg-slate-50"
+        className="w-full rounded-lg border border-slate-200 px-3 py-2 font-mono text-xs leading-relaxed outline-none focus:border-brand-500 disabled:bg-slate-50"
       />
 
       {canEdit && (
@@ -98,7 +98,7 @@ export function AiReviewEditor({
               max={100}
               value={risk}
               onChange={(e) => setRisk(Number(e.target.value))}
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-emerald-500"
+              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand-500"
             />
           </div>
           <div>
@@ -111,7 +111,7 @@ export function AiReviewEditor({
               max={100}
               value={compliance}
               onChange={(e) => setCompliance(Number(e.target.value))}
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-emerald-500"
+              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand-500"
             />
           </div>
         </div>
@@ -133,7 +133,7 @@ export function AiReviewEditor({
               type="button"
               onClick={sendToPimpinan}
               disabled={!!loading}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-700 px-3 py-2 text-sm font-medium text-white hover:bg-emerald-800 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-brand-500 px-3 py-2 text-sm font-medium text-white hover:bg-navy-800 disabled:opacity-50"
             >
               <Send className="h-4 w-4" />
               {loading === "send" ? "Mengirim..." : "Submit ke Pimpinan Bidang"}

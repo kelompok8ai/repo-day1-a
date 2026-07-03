@@ -71,7 +71,7 @@ export default function MemorandumNewPage() {
                   name="title"
                   required
                   placeholder="Subjek singkat"
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                  className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
                 />
               </div>
 
@@ -82,7 +82,7 @@ export default function MemorandumNewPage() {
                 <select
                   name="urgency"
                   defaultValue="normal"
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                  className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
                 >
                   <option value="low">Rendah</option>
                   <option value="normal">Sedang</option>
@@ -100,7 +100,7 @@ export default function MemorandumNewPage() {
                   name="content"
                   rows={8}
                   placeholder="Tuliskan isi memorandum. Cantumkan referensi SK, SE, Instruksi Direksi, dan regulasi terkait."
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                  className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
                 />
                 <p className="mt-1 text-xs text-slate-500">
                   Opsional jika sudah upload PDF — teks PDF akan diekstrak otomatis untuk analisa AI.
@@ -117,7 +117,7 @@ export default function MemorandumNewPage() {
                 <button
                   type="submit"
                   disabled={loading || !pdfFile}
-                  className="rounded-lg bg-emerald-700 px-6 py-2.5 text-sm font-medium text-white hover:bg-emerald-800 disabled:opacity-50"
+                  className="rounded-lg bg-brand-500 px-6 py-2.5 text-sm font-medium text-white hover:bg-navy-800 disabled:opacity-50"
                 >
                   {loading ? "Mengupload & Menganalisa..." : "Simpan Draft"}
                 </button>

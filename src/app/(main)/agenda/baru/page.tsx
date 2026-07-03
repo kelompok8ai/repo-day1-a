@@ -52,7 +52,7 @@ export default function NewAgendaPage() {
                 <input
                   name="title"
                   required
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-emerald-500"
+                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand-500"
                 />
               </div>
               <div>
@@ -60,7 +60,7 @@ export default function NewAgendaPage() {
                 <textarea
                   name="description"
                   rows={3}
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-emerald-500"
+                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand-500"
                 />
               </div>
               <div className="grid gap-4 sm:grid-cols-3">
@@ -70,7 +70,7 @@ export default function NewAgendaPage() {
                     name="date"
                     type="date"
                     required
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-emerald-500"
+                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand-500"
                   />
                 </div>
                 <div>
@@ -79,7 +79,7 @@ export default function NewAgendaPage() {
                     name="startTime"
                     type="time"
                     required
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-emerald-500"
+                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand-500"
                   />
                 </div>
                 <div>
@@ -88,7 +88,7 @@ export default function NewAgendaPage() {
                     name="endTime"
                     type="time"
                     required
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-emerald-500"
+                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand-500"
                   />
                 </div>
               </div>
@@ -97,14 +97,14 @@ export default function NewAgendaPage() {
                   <label className="mb-1 block text-sm font-medium text-slate-700">Lokasi</label>
                   <input
                     name="location"
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-emerald-500"
+                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand-500"
                   />
                 </div>
                 <div>
                   <label className="mb-1 block text-sm font-medium text-slate-700">Prioritas</label>
                   <select
                     name="priority"
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-emerald-500"
+                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand-500"
                   >
                     <option value="normal">Normal</option>
                     <option value="high">Tinggi</option>
@@ -119,7 +119,7 @@ export default function NewAgendaPage() {
                 <textarea
                   name="preparationNotes"
                   rows={2}
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-emerald-500"
+                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand-500"
                 />
               </div>
               {error && <p className="text-sm text-red-600">{error}</p>}
@@ -127,7 +127,7 @@ export default function NewAgendaPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-800 disabled:opacity-50"
+                  className="rounded-lg bg-brand-500 px-4 py-2 text-sm font-medium text-white hover:bg-navy-800 disabled:opacity-50"
                 >
                   {loading ? "Menyimpan..." : "Simpan Jadwal & Agenda"}
                 </button>

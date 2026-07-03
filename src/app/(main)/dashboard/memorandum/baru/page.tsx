@@ -53,7 +53,7 @@ export default function NewMemorandumPage() {
                   name="title"
                   required
                   placeholder="Contoh: Usulan Perubahan Suku Bunga Deposito"
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-emerald-500"
+                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand-500"
                 />
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
@@ -64,7 +64,7 @@ export default function NewMemorandumPage() {
                   <input
                     name="number"
                     placeholder="Auto-generate jika kosong"
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-emerald-500"
+                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand-500"
                   />
                 </div>
                 <div>
@@ -72,7 +72,7 @@ export default function NewMemorandumPage() {
                   <input
                     name="memoDate"
                     type="date"
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-emerald-500"
+                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand-500"
                   />
                 </div>
               </div>
@@ -84,14 +84,14 @@ export default function NewMemorandumPage() {
                   name="proposerDivisi"
                   required
                   placeholder="Contoh: Divisi IT & Digital Banking"
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-emerald-500"
+                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand-500"
                 />
               </div>
               <div>
                 <label className="mb-1 block text-sm font-medium text-slate-700">Urgensi</label>
                 <select
                   name="urgency"
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-emerald-500"
+                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand-500"
                 >
                   <option value="normal">Normal</option>
                   <option value="high">Tinggi</option>
@@ -109,7 +109,7 @@ export default function NewMemorandumPage() {
                   name="content"
                   rows={3}
                   placeholder="Catatan tambahan selain isi PDF..."
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-emerald-500"
+                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand-500"
                 />
               </div>
 
@@ -120,7 +120,7 @@ export default function NewMemorandumPage() {
               <button
                 type="submit"
                 disabled={loading || !pdfFile}
-                className="w-full rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-medium text-white hover:bg-emerald-800 disabled:opacity-50"
+                className="w-full rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-800 disabled:opacity-50"
               >
                 {loading ? "Mengupload PDF..." : "Upload Memorandum PDF"}
               </button>

@@ -43,7 +43,7 @@ export async function MemorandumDetailView({
     <>
       <Header title={memo.title} subtitle={memo.number} session={session} />
       <div className="space-y-6 p-6">
-        <Link href={backHref} className="inline-flex items-center gap-1 text-sm text-emerald-700 hover:underline">
+        <Link href={backHref} className="inline-flex items-center gap-1 text-sm text-brand-600 hover:underline">
           <ArrowLeft className="h-4 w-4" /> Kembali
         </Link>
 
