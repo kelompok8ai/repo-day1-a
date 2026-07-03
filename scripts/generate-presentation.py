@@ -22,31 +22,32 @@ GREEN_SOFT = RGBColor(0xF0, 0xFD, 0xF4)
 ROOT = Path(__file__).resolve().parent.parent
 OUTPUT = ROOT / "CorpSec-Bank-Sumut-Presentasi.pptx"
 SCREENSHOTS = ROOT / "docs" / "screenshots"
-LOGO = ROOT / "docs" / "logo-banksumut.png"
+LOGO = ROOT / "docs" / "logo-banksumut-light.png"
+LOGO_FALLBACK = ROOT / "docs" / "logo-banksumut-asli.png"
 LOGO_OFFICIAL = ROOT / "docs" / "logo-banksumut-official.png"
-LOGO_RATIO = 320 / 117  # lebar / tinggi logo resmi Bank Sumut
+LOGO_RATIO = 886 / 249  # proporsi logo resmi Bank Sumut (landscape)
 
 
 def ensure_logo():
-    """Pastikan logo resmi Bank Sumut tersedia."""
-    if LOGO.exists() or LOGO_OFFICIAL.exists():
+    """Pastikan file logo resmi ada."""
+    if LOGO.exists():
         return
-    try:
-        import urllib.request
-        urllib.request.urlretrieve(
-            "https://banksumut.co.id/wp-content/uploads/2019/04/logo-1.png",
-            LOGO_OFFICIAL,
-        )
-    except Exception:
-        pass
+    if not LOGO_OFFICIAL.exists():
+        try:
+            import urllib.request
+            urllib.request.urlretrieve(
+                "https://banksumut.co.id/wp-content/uploads/2019/04/logo-1.png",
+                LOGO_OFFICIAL,
+            )
+        except Exception:
+            pass
 
 
 def logo_path() -> Path | None:
     ensure_logo()
-    if LOGO_OFFICIAL.exists():
-        return LOGO_OFFICIAL
-    if LOGO.exists():
-        return LOGO
+    for path in (LOGO, LOGO_FALLBACK, LOGO_OFFICIAL):
+        if path.exists():
+            return path
     return None
 
 
