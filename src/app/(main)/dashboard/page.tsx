@@ -40,7 +40,7 @@ export default async function DashboardPage() {
       <div className="space-y-6 p-6">
         {/* Aksi Cepat CorpSec */}
         <div className="grid gap-4 sm:grid-cols-2">
-          <Link href="/dashboard/memorandum#upload-memorandum">
+          <Link href="/dashboard/memorandum/new">
             <Card className="h-full border-emerald-200 transition hover:border-emerald-400 hover:shadow-md">
               <CardContent className="flex items-center gap-4 py-5">
                 <div className="rounded-xl bg-emerald-100 p-3">

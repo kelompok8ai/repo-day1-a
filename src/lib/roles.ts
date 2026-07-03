@@ -32,6 +32,7 @@ export const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
   corpsec: [
     { href: "/dashboard", label: "Dashboard", icon: "LayoutDashboard" },
     { href: "/dashboard/memorandum", label: "Memorandum", icon: "FileText" },
+    { href: "/dashboard/memorandum/new", label: "Buat Memorandum", icon: "Plus" },
     { href: "/dashboard/memorandum#upload-memorandum", label: "Upload Memorandum", icon: "Upload" },
     { href: "/agenda", label: "Agenda Direksi", icon: "Calendar" },
     { href: "/agenda/baru", label: "Buat Jadwal Agenda", icon: "Plus" },
@@ -66,7 +67,8 @@ export function canAccessRoute(role: UserRole, pathname: string): boolean {
       return (
         pathname.startsWith("/pimpinan-bidang") ||
         (pathname.startsWith("/dashboard/memorandum/") &&
-          pathname !== "/dashboard/memorandum/baru")
+          pathname !== "/dashboard/memorandum/baru" &&
+          pathname !== "/dashboard/memorandum/new")
       );
     case "corpsec":
       return CORPSEC_ROUTES.some(

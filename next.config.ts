@@ -11,7 +11,12 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/memorandum/baru",
-        destination: "/dashboard/memorandum/baru",
+        destination: "/dashboard/memorandum/new",
+        permanent: false,
+      },
+      {
+        source: "/dashboard/memorandum/baru",
+        destination: "/dashboard/memorandum/new",
         permanent: false,
       },
       {
