@@ -371,10 +371,25 @@ export function sendToPimpinanBidang(id: number) {
   const db = getDb();
   return db
     .update(schema.memorandum)
-    .set({ status: "pimpinan_review", isRead: false })
+    .set({ status: "pimpinan_review", isRead: false, pimpinanDecision: null, rejectionComment: null })
     .where(eq(schema.memorandum.id, id))
     .returning()
     .get();
+}
+
+function notifyCorpsec(memorandumId: number, type: string, message: string) {
+  const db = getDb();
+  const corpsecUsers = db.select().from(schema.users).where(eq(schema.users.role, "corpsec")).all();
+  for (const user of corpsecUsers) {
+    db.insert(schema.notifications).values({
+      userId: user.id,
+      memorandumId,
+      type,
+      message,
+      isRead: false,
+      createdAt: new Date().toISOString(),
+    }).run();
+  }
 }
 
 export function approveWithSignature(
@@ -383,27 +398,64 @@ export function approveWithSignature(
   signedBy: string
 ) {
   const db = getDb();
-  return db
+  const memo = getMemorandumById(id);
+  const result = db
     .update(schema.memorandum)
     .set({
-      status: "approved",
+      status: "returned_to_corpsec",
+      pimpinanDecision: "approved",
       signatureData,
       signedBy,
       approvedAt: new Date().toISOString(),
       signedAt: new Date().toISOString(),
+      isRead: false,
     })
     .where(eq(schema.memorandum.id, id))
     .returning()
     .get();
+
+  if (memo) {
+    notifyCorpsec(
+      id,
+      "pimpinan_approved",
+      `Pimpinan Bidang MENYETUJUI memorandum ${memo.number} — ${memo.title}. Silakan review dan teruskan ke Sekretaris Direksi.`
+    );
+  }
+  return result;
 }
 
 export function rejectWithComment(id: number, comment: string) {
   const db = getDb();
-  return db
+  const memo = getMemorandumById(id);
+  const result = db
     .update(schema.memorandum)
     .set({
       status: "returned_to_corpsec",
+      pimpinanDecision: "rejected",
       rejectionComment: comment,
+      isRead: false,
+    })
+    .where(eq(schema.memorandum.id, id))
+    .returning()
+    .get();
+
+  if (memo) {
+    notifyCorpsec(
+      id,
+      "pimpinan_rejected",
+      `Pimpinan Bidang MENOLAK memorandum ${memo.number} — ${memo.title}. Komentar: ${comment}`
+    );
+  }
+  return result;
+}
+
+export function sendToSekdireksi(id: number) {
+  const db = getDb();
+  return db
+    .update(schema.memorandum)
+    .set({
+      status: "sent_to_sekdireksi",
+      sentToSekdireksiAt: new Date().toISOString(),
       isRead: false,
     })
     .where(eq(schema.memorandum.id, id))
@@ -411,14 +463,78 @@ export function rejectWithComment(id: number, comment: string) {
     .get();
 }
 
-export function submitBackToCorpsec(id: number) {
+export function receiveBySekdireksi(id: number) {
   const db = getDb();
   return db
     .update(schema.memorandum)
-    .set({ status: "returned_to_corpsec", isRead: false })
+    .set({
+      status: "received_sekdireksi",
+      receivedBySekdireksiAt: new Date().toISOString(),
+    })
     .where(eq(schema.memorandum.id, id))
     .returning()
     .get();
+}
+
+export function authenticateUser(username: string, password: string) {
+  const db = getDb();
+  return db
+    .select()
+    .from(schema.users)
+    .where(and(eq(schema.users.username, username), eq(schema.users.password, password)))
+    .get();
+}
+
+export function getNotificationsForUser(userId: number) {
+  const db = getDb();
+  return db
+    .select()
+    .from(schema.notifications)
+    .where(eq(schema.notifications.userId, userId))
+    .orderBy(desc(schema.notifications.createdAt))
+    .all();
+}
+
+export function markNotificationRead(id: number) {
+  const db = getDb();
+  return db
+    .update(schema.notifications)
+    .set({ isRead: true })
+    .where(eq(schema.notifications.id, id))
+    .returning()
+    .get();
+}
+
+export function getMemorandumByUserId(userId: number) {
+  const db = getDb();
+  return db
+    .select()
+    .from(schema.memorandum)
+    .where(eq(schema.memorandum.submittedByUserId, userId))
+    .orderBy(desc(schema.memorandum.createdAt))
+    .all();
+}
+
+export function getSekdireksiMemorandum() {
+  const db = getDb();
+  return db
+    .select()
+    .from(schema.memorandum)
+    .where(
+      inArray(schema.memorandum.status, ["sent_to_sekdireksi", "received_sekdireksi"])
+    )
+    .orderBy(desc(schema.memorandum.sentToSekdireksiAt))
+    .all();
+}
+
+export function getReturnedToCorpsecMemos() {
+  const db = getDb();
+  return db
+    .select()
+    .from(schema.memorandum)
+    .where(eq(schema.memorandum.status, "returned_to_corpsec"))
+    .orderBy(desc(schema.memorandum.approvedAt))
+    .all();
 }
 
 export function getUsers() {

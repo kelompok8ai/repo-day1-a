@@ -9,7 +9,10 @@ import { getPimpinanMemorandum } from "@/lib/db/queries";
 import { MEMORANDUM_STATUS, URGENCY } from "@/lib/constants";
 import { formatDate, daysSince } from "@/lib/utils";
 
-export default function PimpinanBidangPage() {
+import { getSession } from "@/lib/auth";
+
+export default async function PimpinanBidangPage() {
+  const session = await getSession();
   const items = getPimpinanMemorandum();
   const unreadCount = items.filter((m) => !m.isRead).length;
 
@@ -18,6 +21,7 @@ export default function PimpinanBidangPage() {
       <Header
         title="Menu Pimpinan Bidang"
         subtitle="Review, approve dengan tanda tangan digital, atau tolak dengan komentar revisi"
+        session={session ?? undefined}
       />
       <div className="p-6">
         <div className="mb-6 grid gap-4 sm:grid-cols-3">
@@ -126,7 +130,8 @@ export default function PimpinanBidangPage() {
                         id={memo.id}
                         status={memo.status}
                         hasAiSummary={!!memo.aiSummary}
-                        role="pimpinan"
+                        role="pimpinan_bidang"
+                        pimpinanDecision={memo.pimpinanDecision}
                       />
                     </div>
                   </CardContent>

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Calendar,
@@ -15,9 +15,15 @@ import {
   Menu,
   X,
   UserCheck,
+  Upload,
+  Plus,
+  Inbox,
+  LogOut,
 } from "lucide-react";
 import { useState } from "react";
-import { APP_NAME, NAV_ITEMS } from "@/lib/constants";
+import { APP_NAME } from "@/lib/constants";
+import { NAV_BY_ROLE, ROLE_LABELS } from "@/lib/roles";
+import type { SessionUser } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
 const iconMap = {
@@ -30,11 +36,22 @@ const iconMap = {
   Clock,
   BarChart3,
   UserCheck,
+  Upload,
+  Plus,
+  Inbox,
 };
 
-export function Sidebar() {
+export function Sidebar({ session }: { session: SessionUser }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
+  const navItems = NAV_BY_ROLE[session.role];
+
+  async function logout() {
+    await fetch("/api/auth/logout", { method: "POST" });
+    router.push("/login");
+    router.refresh();
+  }
 
   return (
     <>
@@ -67,7 +84,7 @@ export function Sidebar() {
             </div>
             <div>
               <p className="text-sm font-bold leading-tight">{APP_NAME}</p>
-              <p className="text-xs text-emerald-300">Corporate Secretary</p>
+              <p className="text-xs text-emerald-300">{ROLE_LABELS[session.role]}</p>
             </div>
           </div>
           <button
@@ -82,8 +99,8 @@ export function Sidebar() {
 
         <nav className="flex-1 overflow-y-auto px-3 py-4">
           <ul className="space-y-1">
-            {NAV_ITEMS.map((item) => {
-              const Icon = iconMap[item.icon];
+            {navItems.map((item) => {
+              const Icon = iconMap[item.icon as keyof typeof iconMap];
               const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
               return (
                 <li key={item.href}>
@@ -107,8 +124,19 @@ export function Sidebar() {
         </nav>
 
         <div className="border-t border-emerald-800 px-5 py-4">
-          <p className="text-xs text-emerald-300">Bank Sumut</p>
-          <p className="text-xs text-emerald-400">Draft v0.1 — PRD Discovery</p>
+          <p className="text-xs font-medium text-white">{session.name}</p>
+          <p className="text-xs text-emerald-400">@{session.username}</p>
+          {session.divisi && (
+            <p className="mt-1 text-xs text-emerald-300">{session.divisi}</p>
+          )}
+          <button
+            type="button"
+            onClick={logout}
+            className="mt-3 flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-emerald-200 hover:bg-emerald-800"
+          >
+            <LogOut className="h-3.5 w-3.5" />
+            Keluar
+          </button>
         </div>
       </aside>
     </>

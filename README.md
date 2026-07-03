@@ -30,7 +30,16 @@ npm install
 npm run dev
 ```
 
-Buka [http://localhost:3000](http://localhost:3000) — database SQLite otomatis dibuat dan di-seed saat pertama kali diakses.
+Buka [http://localhost:3000](http://localhost:3000) — akan diarahkan ke halaman login.
+
+### Akun Demo (4 Level User)
+
+| Role | Username | Password | Akses |
+|---|---|---|---|
+| Divisi Pengusul | `pengusul` | `pengusul123` | Upload & kirim memorandum saja |
+| Pemimpin Bidang | `pimpinan` | `pimpinan123` | Review, approve/tolak memorandum |
+| Corporate Secretary | `corpsec` | `corpsec123` | Akses penuh seluruh fitur |
+| Sekretaris Direksi | `sekdireksi` | `sekdireksi123` | Terima dokumen yang disetujui |
 
 ```bash
 npm run build   # Production build

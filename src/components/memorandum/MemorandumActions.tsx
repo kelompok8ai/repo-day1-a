@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { DigitalSignaturePad } from "./DigitalSignaturePad";
+import type { UserRole } from "@/lib/db/schema";
 
 const PIMPINAN_STATUSES = ["pimpinan_review", "pending_approval"];
 
@@ -10,12 +11,14 @@ export function MemorandumActions({
   id,
   status,
   hasAiSummary,
-  role = "corpsec",
+  role,
+  pimpinanDecision,
 }: {
   id: number;
   status: string;
   hasAiSummary: boolean;
-  role?: "corpsec" | "pimpinan";
+  role: UserRole;
+  pimpinanDecision?: string | null;
 }) {
   const router = useRouter();
   const [loading, setLoading] = useState<string | null>(null);
@@ -36,12 +39,14 @@ export function MemorandumActions({
     setShowReject(false);
   }
 
-  const isPimpinan = role === "pimpinan" || PIMPINAN_STATUSES.includes(status);
+  if (role === "pengusul" || role === "sekdireksi") {
+    return <p className="text-xs text-slate-500">Tidak ada aksi tersedia.</p>;
+  }
 
   return (
     <div className="flex flex-col gap-3">
-      {/* Upload / AI Analysis */}
-      {(status === "uploaded" || status === "ai_review") && role === "corpsec" && (
+      {/* CORPSEC: Submit AI */}
+      {role === "corpsec" && (status === "uploaded" || status === "ai_review") && (
         <button
           type="button"
           onClick={() => action("generate_ai")}
@@ -52,8 +57,37 @@ export function MemorandumActions({
         </button>
       )}
 
-      {/* Pimpinan Bidang: Approve with signature */}
-      {isPimpinan && PIMPINAN_STATUSES.includes(status) && (
+      {/* CORPSEC: Send to Pimpinan */}
+      {role === "corpsec" &&
+        hasAiSummary &&
+        ["corpsec_review", "returned_to_corpsec"].includes(status) &&
+        pimpinanDecision !== "approved" && (
+          <button
+            type="button"
+            onClick={() => action("send_to_pimpinan")}
+            disabled={!!loading}
+            className="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-800 disabled:opacity-50"
+          >
+            {loading === "send_to_pimpinan" ? "Mengirim..." : "Submit / Send ke Pimpinan Bidang"}
+          </button>
+        )}
+
+      {/* CORPSEC: Send to Sekdireksi after pimpinan approved */}
+      {role === "corpsec" &&
+        status === "returned_to_corpsec" &&
+        pimpinanDecision === "approved" && (
+          <button
+            type="button"
+            onClick={() => action("send_to_sekdireksi")}
+            disabled={!!loading}
+            className="rounded-lg bg-blue-700 px-4 py-2 text-sm font-medium text-white hover:bg-blue-800 disabled:opacity-50"
+          >
+            {loading === "send_to_sekdireksi" ? "Mengirim..." : "Submit / Send ke Sekretaris Direksi"}
+          </button>
+        )}
+
+      {/* PIMPINAN: Approve / Reject */}
+      {role === "pimpinan_bidang" && PIMPINAN_STATUSES.includes(status) && (
         <>
           {!showSign && !showReject && (
             <>
@@ -73,7 +107,6 @@ export function MemorandumActions({
               </button>
             </>
           )}
-
           {showSign && (
             <DigitalSignaturePad
               loading={loading === "approve_sign"}
@@ -86,7 +119,6 @@ export function MemorandumActions({
               }
             />
           )}
-
           {showReject && (
             <div className="space-y-2">
               <label className="block text-xs font-medium text-slate-600">
@@ -96,15 +128,13 @@ export function MemorandumActions({
                 value={rejectComment}
                 onChange={(e) => setRejectComment(e.target.value)}
                 rows={4}
-                placeholder="Contoh: Bagian analisis risiko kredit perlu diperjelas..."
+                placeholder="Contoh: Bagian analisis risiko perlu diperjelas..."
                 className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-red-400"
               />
               <div className="flex gap-2">
                 <button
                   type="button"
-                  onClick={() =>
-                    action("reject_with_comment", { comment: rejectComment })
-                  }
+                  onClick={() => action("reject_with_comment", { comment: rejectComment })}
                   disabled={!rejectComment.trim() || !!loading}
                   className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
                 >
@@ -123,25 +153,21 @@ export function MemorandumActions({
         </>
       )}
 
-      {/* Returned to CorpSec - can re-send to pimpinan after edit */}
-      {status === "returned_to_corpsec" && role === "corpsec" && hasAiSummary && (
-        <button
-          type="button"
-          onClick={() => action("send_to_pimpinan")}
-          disabled={!!loading}
-          className="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-800 disabled:opacity-50"
-        >
-          {loading === "send_to_pimpinan" ? "Mengirim..." : "Kirim Ulang ke Pimpinan Bidang"}
-        </button>
-      )}
+      {role === "corpsec" &&
+        status === "returned_to_corpsec" &&
+        pimpinanDecision === "rejected" && (
+          <p className="text-xs text-orange-700">
+            Memorandum ditolak Pimpinan Bidang. Edit review AI lalu kirim ulang ke Pimpinan Bidang.
+          </p>
+        )}
 
-      {status === "approved" && (
-        <p className="text-xs text-emerald-700">✓ Memorandum disetujui dengan tanda tangan digital.</p>
-      )}
-
-      {!["uploaded", "ai_review", "corpsec_review", "returned_to_corpsec", ...PIMPINAN_STATUSES, "approved"].includes(status) && (
-        <p className="text-xs text-slate-500">Tidak ada aksi tersedia untuk status ini.</p>
-      )}
+      {role === "corpsec" &&
+        status === "returned_to_corpsec" &&
+        pimpinanDecision === "approved" && (
+          <p className="text-xs text-emerald-700">
+            Disetujui Pimpinan Bidang. Kirim ke Sekretaris Direksi untuk diterima.
+          </p>
+        )}
     </div>
   );
 }

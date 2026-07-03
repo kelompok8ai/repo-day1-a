@@ -16,20 +16,72 @@ import { Badge } from "@/components/ui/Badge";
 import { MemorandumStatusChart } from "@/components/charts/MemorandumStatusChart";
 import { MemorandumTrendChart } from "@/components/charts/MemorandumTrendChart";
 import { SlaTrendChart } from "@/components/charts/SlaTrendChart";
-import { getDashboardStats } from "@/lib/db/queries";
+import { getDashboardStats, getNotificationsForUser, getReturnedToCorpsecMemos } from "@/lib/db/queries";
+import { getSession } from "@/lib/auth";
 import { MEMORANDUM_STATUS, URGENCY } from "@/lib/constants";
 import { formatDate, formatTimeRange, daysSince } from "@/lib/utils";
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const session = await getSession();
   const data = getDashboardStats();
+  const notifications = session ? getNotificationsForUser(session.id) : [];
+  const returnedMemos = getReturnedToCorpsecMemos();
+  const unreadNotifs = notifications.filter((n) => !n.isRead);
 
   return (
     <>
       <Header
-        title="Dashboard Direksi"
-        subtitle="Ringkasan agenda, memorandum, dan aktivitas Corporate Secretary"
+        title="Dashboard Corporate Secretary"
+        subtitle="Ringkasan agenda, memorandum, dan notifikasi keputusan Pimpinan Bidang"
+        session={session ?? undefined}
       />
       <div className="space-y-6 p-6">
+        {(unreadNotifs.length > 0 || returnedMemos.length > 0) && (
+          <Card className="border-orange-200 bg-orange-50/50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-orange-800">
+                <Bell className="h-4 w-4" />
+                Notifikasi Keputusan Pimpinan Bidang
+                {unreadNotifs.length > 0 && (
+                  <Badge className="bg-red-500 text-white">{unreadNotifs.length} baru</Badge>
+                )}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {returnedMemos.map((memo) => (
+                <Link
+                  key={memo.id}
+                  href={`/memorandum/${memo.id}`}
+                  className="block rounded-lg border border-orange-200 bg-white p-3 transition hover:border-emerald-300"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <p className="font-medium text-slate-900">{memo.title}</p>
+                      <p className="text-xs text-slate-500">{memo.number}</p>
+                    </div>
+                    <Badge
+                      className={
+                        memo.pimpinanDecision === "approved"
+                          ? "bg-emerald-100 text-emerald-800"
+                          : "bg-red-100 text-red-700"
+                      }
+                    >
+                      {memo.pimpinanDecision === "approved" ? "DISETUJUI" : "DITOLAK"}
+                    </Badge>
+                  </div>
+                  {memo.rejectionComment && (
+                    <p className="mt-2 text-xs text-orange-800">
+                      Komentar: {memo.rejectionComment}
+                    </p>
+                  )}
+                </Link>
+              ))}
+              {unreadNotifs.slice(0, 3).map((n) => (
+                <p key={n.id} className="text-xs text-slate-600">{n.message}</p>
+              ))}
+            </CardContent>
+          </Card>
+        )}
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <StatCard
             title="Agenda Hari Ini"

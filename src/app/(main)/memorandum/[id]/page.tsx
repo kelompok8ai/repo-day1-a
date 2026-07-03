@@ -17,6 +17,7 @@ import { AiReviewEditor } from "@/components/memorandum/AiReviewEditor";
 import { WorkflowStepper, MarkAsRead } from "@/components/memorandum/WorkflowStepper";
 import { ReadIndicator } from "@/components/memorandum/ReadIndicator";
 import { getMemorandumById } from "@/lib/db/queries";
+import { getSession } from "@/lib/auth";
 import { MEMORANDUM_STATUS, URGENCY } from "@/lib/constants";
 import { formatDate, formatDateTime } from "@/lib/utils";
 
@@ -37,6 +38,8 @@ export default async function MemorandumDetailPage({
   const { id } = await params;
   const memo = getMemorandumById(Number(id));
   if (!memo) notFound();
+  const session = await getSession();
+  if (!session) notFound();
 
   const statusInfo = MEMORANDUM_STATUS[memo.status];
   const regulatoryRefs = parseRegulatoryRefs(memo.regulatoryReferences);
@@ -44,7 +47,7 @@ export default async function MemorandumDetailPage({
   return (
     <>
       <MarkAsRead id={memo.id} />
-      <Header title={memo.title} subtitle={memo.number} />
+      <Header title={memo.title} subtitle={memo.number} session={session} />
       <div className="space-y-6 p-6">
         <Link
           href="/memorandum"
@@ -150,6 +153,7 @@ export default async function MemorandumDetailPage({
                     initialSummary={memo.aiSummary ?? ""}
                     initialRisk={memo.aiRiskScore}
                     initialCompliance={memo.aiComplianceScore}
+                    role={session.role}
                   />
                   {memo.aiConfidence && (
                     <p className="mt-3 text-xs text-slate-400">
@@ -243,14 +247,15 @@ export default async function MemorandumDetailPage({
 
             <Card>
               <CardHeader>
-                <CardTitle>Aksi — Corporate Secretary</CardTitle>
+                <CardTitle>Aksi</CardTitle>
               </CardHeader>
               <CardContent>
                 <MemorandumActions
                   id={memo.id}
                   status={memo.status}
                   hasAiSummary={!!memo.aiSummary}
-                  role="corpsec"
+                  role={session.role}
+                  pimpinanDecision={memo.pimpinanDecision}
                 />
               </CardContent>
             </Card>

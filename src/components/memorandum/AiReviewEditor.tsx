@@ -10,6 +10,7 @@ type Props = {
   initialSummary: string;
   initialRisk: number | null;
   initialCompliance: number | null;
+  role?: string;
 };
 
 export function AiReviewEditor({
@@ -18,13 +19,15 @@ export function AiReviewEditor({
   initialSummary,
   initialRisk,
   initialCompliance,
+  role,
 }: Props) {
   const router = useRouter();
   const [summary, setSummary] = useState(initialSummary);
   const [risk, setRisk] = useState(initialRisk ?? 30);
   const [compliance, setCompliance] = useState(initialCompliance ?? 90);
   const [loading, setLoading] = useState<string | null>(null);
-  const canEdit = ["corpsec_review", "returned_to_corpsec"].includes(status);
+  const canEdit =
+    role === "corpsec" && ["corpsec_review", "returned_to_corpsec"].includes(status);
 
   async function saveReview() {
     setLoading("save");

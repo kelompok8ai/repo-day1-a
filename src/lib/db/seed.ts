@@ -22,11 +22,38 @@ export function seedDatabase(db: BetterSQLite3Database<typeof schema>) {
   if (value > 0) return;
 
   db.insert(schema.users).values([
-    { name: "Drs. Ahmad Wijaya", email: "ahmad.wijaya@banksumut.co.id", role: "Direksi" },
-    { name: "Siti Rahayu, SE", email: "siti.rahayu@banksumut.co.id", role: "Corporate Secretary" },
-    { name: "Ir. Hendra Gunawan", email: "hendra.gunawan@banksumut.co.id", role: "Pemimpin Bidang Corporate Secretary" },
-    { name: "Budi Santoso", email: "budi.santoso@banksumut.co.id", role: "Sekretaris Direksi" },
-    { name: "Maya Putri", email: "maya.putri@banksumut.co.id", role: "Protokoler Officer" },
+    {
+      name: "Rina Wulandari",
+      email: "rina.wulandari@banksumut.co.id",
+      username: "pengusul",
+      password: "pengusul123",
+      role: "pengusul",
+      divisi: "Divisi IT & Digital Banking",
+    },
+    {
+      name: "Ir. Hendra Gunawan",
+      email: "hendra.gunawan@banksumut.co.id",
+      username: "pimpinan",
+      password: "pimpinan123",
+      role: "pimpinan_bidang",
+      divisi: null,
+    },
+    {
+      name: "Siti Rahayu, SE",
+      email: "siti.rahayu@banksumut.co.id",
+      username: "corpsec",
+      password: "corpsec123",
+      role: "corpsec",
+      divisi: null,
+    },
+    {
+      name: "Budi Santoso",
+      email: "budi.santoso@banksumut.co.id",
+      username: "sekdireksi",
+      password: "sekdireksi123",
+      role: "sekdireksi",
+      divisi: null,
+    },
   ]).run();
 
   db.insert(schema.agenda).values([

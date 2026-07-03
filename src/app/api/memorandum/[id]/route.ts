@@ -5,6 +5,8 @@ import {
   sendToPimpinanBidang,
   approveWithSignature,
   rejectWithComment,
+  sendToSekdireksi,
+  receiveBySekdireksi,
   getMemorandumById,
 } from "@/lib/db/queries";
 
@@ -46,6 +48,14 @@ export async function PATCH(
     }
     case "reject_with_comment": {
       const result = rejectWithComment(memoId, body.comment ?? "");
+      return NextResponse.json(result);
+    }
+    case "send_to_sekdireksi": {
+      const result = sendToSekdireksi(memoId);
+      return NextResponse.json(result);
+    }
+    case "terima": {
+      const result = receiveBySekdireksi(memoId);
       return NextResponse.json(result);
     }
     default:

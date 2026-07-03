@@ -4,7 +4,10 @@ export const users = sqliteTable("users", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   name: text("name").notNull(),
   email: text("email").notNull(),
+  username: text("username").notNull().unique(),
+  password: text("password").notNull(),
   role: text("role").notNull(),
+  divisi: text("divisi"),
 });
 
 export const agenda = sqliteTable("agenda", {
@@ -26,7 +29,9 @@ export const memorandum = sqliteTable("memorandum", {
   number: text("number").notNull(),
   title: text("title").notNull(),
   content: text("content").notNull(),
+  memoDate: text("memo_date"),
   proposerDivisi: text("proposer_divisi").notNull(),
+  submittedByUserId: integer("submitted_by_user_id").references(() => users.id),
   status: text("status").notNull().default("uploaded"),
   urgency: text("urgency").notNull().default("normal"),
   fileName: text("file_name"),
@@ -40,12 +45,27 @@ export const memorandum = sqliteTable("memorandum", {
   aiConfidence: real("ai_confidence"),
   aiSummaryEdited: integer("ai_summary_edited", { mode: "boolean" }).notNull().default(false),
   rejectionComment: text("rejection_comment"),
+  pimpinanDecision: text("pimpinan_decision"),
   signatureData: text("signature_data"),
   signedBy: text("signed_by"),
   isRead: integer("is_read", { mode: "boolean" }).notNull().default(false),
   submittedAt: text("submitted_at"),
   approvedAt: text("approved_at"),
   signedAt: text("signed_at"),
+  sentToSekdireksiAt: text("sent_to_sekdireksi_at"),
+  receivedBySekdireksiAt: text("received_by_sekdireksi_at"),
+  createdAt: text("created_at").notNull(),
+});
+
+export const notifications = sqliteTable("notifications", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id),
+  memorandumId: integer("memorandum_id").references(() => memorandum.id),
+  type: text("type").notNull(),
+  message: text("message").notNull(),
+  isRead: integer("is_read", { mode: "boolean" }).notNull().default(false),
   createdAt: text("created_at").notNull(),
 });
 
@@ -114,6 +134,7 @@ export const slaRecords = sqliteTable("sla_records", {
 });
 
 export type User = typeof users.$inferSelect;
+export type Notification = typeof notifications.$inferSelect;
 export type Agenda = typeof agenda.$inferSelect;
 export type Memorandum = typeof memorandum.$inferSelect;
 export type MediaArticle = typeof mediaArticles.$inferSelect;
@@ -122,3 +143,5 @@ export type MeetingFollowup = typeof meetingFollowups.$inferSelect;
 export type KnowledgeDocument = typeof knowledgeDocuments.$inferSelect;
 export type RegulatoryNotification = typeof regulatoryNotifications.$inferSelect;
 export type SlaRecord = typeof slaRecords.$inferSelect;
+
+export type UserRole = "pengusul" | "pimpinan_bidang" | "corpsec" | "sekdireksi";
