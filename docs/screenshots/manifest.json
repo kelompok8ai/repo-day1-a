@@ -1,0 +1,47 @@
+[
+  [
+    "01-login",
+    "/login",
+    null
+  ],
+  [
+    "02-dashboard",
+    "/dashboard",
+    {
+      "username": "corpsec",
+      "password": "corpsec123"
+    }
+  ],
+  [
+    "03-memorandum",
+    "/dashboard/memorandum",
+    {
+      "username": "corpsec",
+      "password": "corpsec123"
+    }
+  ],
+  [
+    "04-pengusul",
+    "/pengusul",
+    {
+      "username": "pengusul",
+      "password": "pengusul123"
+    }
+  ],
+  [
+    "05-pimpinan",
+    "/pimpinan-bidang",
+    {
+      "username": "pimpinan",
+      "password": "pimpinan123"
+    }
+  ],
+  [
+    "06-agenda",
+    "/agenda",
+    {
+      "username": "corpsec",
+      "password": "corpsec123"
+    }
+  ]
+]
