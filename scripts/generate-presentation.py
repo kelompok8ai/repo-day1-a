@@ -1,296 +1,406 @@
 #!/usr/bin/env python3
-"""Generate CorpSec Bank Sumut presentation (PPTX) — 15 slides."""
+"""Generate CorpSec Bank Sumut presentation — 15 slides, modern & readable."""
 
 from pathlib import Path
 
 from pptx import Presentation
 from pptx.dml.color import RGBColor
 from pptx.enum.shapes import MSO_SHAPE
-from pptx.enum.text import PP_ALIGN
+from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from pptx.util import Inches, Pt
 
 NAVY = RGBColor(0x0C, 0x23, 0x40)
-NAVY_MID = RGBColor(0x15, 0x34, 0x5C)
+NAVY_SOFT = RGBColor(0x15, 0x34, 0x5C)
 ORANGE = RGBColor(0xF5, 0x82, 0x20)
+ORANGE_LIGHT = RGBColor(0xFF, 0xF4, 0xEB)
 WHITE = RGBColor(0xFF, 0xFF, 0xFF)
-LIGHT_GRAY = RGBColor(0xF4, 0xF6, 0xF9)
+BG = RGBColor(0xF8, 0xFA, 0xFC)
 SLATE = RGBColor(0x64, 0x74, 0x8B)
-DARK_TEXT = RGBColor(0x1E, 0x29, 0x3B)
+TEXT = RGBColor(0x1E, 0x29, 0x3B)
 
-OUTPUT = Path(__file__).resolve().parent.parent / "docs" / "CorpSec-Bank-Sumut-Presentasi.pptx"
-
-
-def set_slide_bg(slide, color: RGBColor):
-    fill = slide.background.fill
-    fill.solid()
-    fill.fore_color.rgb = color
+OUTPUT = Path(__file__).resolve().parent.parent / "CorpSec-Bank-Sumut-Presentasi.pptx"
 
 
-def add_accent_bar(slide, top=Inches(0), height=Inches(0.08)):
-    shape = slide.shapes.add_shape(
-        MSO_SHAPE.RECTANGLE, Inches(0), top, Inches(13.333), height
-    )
-    shape.fill.solid()
-    shape.fill.fore_color.rgb = ORANGE
-    shape.line.fill.background()
+def set_bg(slide, color):
+    slide.background.fill.solid()
+    slide.background.fill.fore_color.rgb = color
 
 
-def add_footer(slide, text: str):
-    box = slide.shapes.add_textbox(Inches(0.5), Inches(7.0), Inches(12.3), Inches(0.4))
-    p = box.text_frame.paragraphs[0]
-    p.text = text
-    p.font.size = Pt(9)
-    p.font.color.rgb = SLATE
+def footer(slide, page: int):
+    bar = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(0), Inches(7.05), Inches(13.333), Inches(0.45))
+    bar.fill.solid()
+    bar.fill.fore_color.rgb = NAVY
+    bar.line.fill.background()
+
+    left = slide.shapes.add_textbox(Inches(0.5), Inches(7.1), Inches(6), Inches(0.35))
+    p = left.text_frame.paragraphs[0]
+    p.text = "CorpSec Bank Sumut"
+    p.font.size = Pt(11)
+    p.font.color.rgb = ORANGE
+    p.font.bold = True
+
+    right = slide.shapes.add_textbox(Inches(11.5), Inches(7.1), Inches(1.5), Inches(0.35))
+    p = right.text_frame.paragraphs[0]
+    p.text = str(page)
+    p.font.size = Pt(11)
+    p.font.color.rgb = WHITE
     p.alignment = PP_ALIGN.RIGHT
 
 
-def add_title_slide(prs, title: str, subtitle: str, extra: str = ""):
-    slide = prs.slides.add_slide(prs.slide_layouts[6])
-    set_slide_bg(slide, NAVY)
-    add_accent_bar(slide, top=Inches(0), height=Inches(0.12))
+def slide_title(slide, title: str, subtitle: str = ""):
+    accent = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(0), Inches(0), Inches(0.18), Inches(7.05))
+    accent.fill.solid()
+    accent.fill.fore_color.rgb = ORANGE
+    accent.line.fill.background()
 
-    circle = slide.shapes.add_shape(
-        MSO_SHAPE.OVAL, Inches(9.5), Inches(-1), Inches(5), Inches(5)
-    )
-    circle.fill.solid()
-    circle.fill.fore_color.rgb = ORANGE
-    circle.fill.transparency = 0.85
-    circle.line.fill.background()
-
-    title_box = slide.shapes.add_textbox(Inches(0.8), Inches(2.2), Inches(11), Inches(1.5))
-    p = title_box.text_frame.paragraphs[0]
+    box = slide.shapes.add_textbox(Inches(0.55), Inches(0.35), Inches(12.2), Inches(1.1))
+    tf = box.text_frame
+    p = tf.paragraphs[0]
     p.text = title
-    p.font.size = Pt(40)
+    p.font.size = Pt(34)
+    p.font.bold = True
+    p.font.color.rgb = NAVY
+
+    if subtitle:
+        p2 = tf.add_paragraph()
+        p2.text = subtitle
+        p2.font.size = Pt(17)
+        p2.font.color.rgb = SLATE
+        p2.space_before = Pt(6)
+
+
+def add_bullets(slide, items: list[str], top=1.55, left=0.55, width=12.2, size=20):
+    box = slide.shapes.add_textbox(Inches(left), Inches(top), Inches(width), Inches(5.2))
+    tf = box.text_frame
+    tf.word_wrap = True
+    for i, item in enumerate(items):
+        p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
+        p.text = item
+        p.font.size = Pt(size - 2 if item.startswith("   ") else size)
+        p.font.color.rgb = SLATE if item.startswith("   ") else TEXT
+        p.space_after = Pt(14)
+        p.line_spacing = 1.25
+        if item.startswith("   "):
+            p.level = 1
+
+
+def cover_slide(prs, page: int):
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+    set_bg(slide, NAVY)
+
+    # Orange diagonal accent
+    tri = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(8.2), Inches(0), Inches(5.2), Inches(7.05))
+    tri.fill.solid()
+    tri.fill.fore_color.rgb = ORANGE
+    tri.line.fill.background()
+    tri.rotation = 0
+
+    logo = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.7), Inches(0.7), Inches(1.1), Inches(1.1))
+    logo.fill.solid()
+    logo.fill.fore_color.rgb = ORANGE
+    logo.line.fill.background()
+
+    lt = slide.shapes.add_textbox(Inches(0.85), Inches(0.88), Inches(0.8), Inches(0.6))
+    p = lt.text_frame.paragraphs[0]
+    p.text = "BS"
+    p.font.size = Pt(28)
+    p.font.bold = True
+    p.font.color.rgb = WHITE
+    p.alignment = PP_ALIGN.CENTER
+
+    t1 = slide.shapes.add_textbox(Inches(0.7), Inches(2.3), Inches(7.5), Inches(1.4))
+    p = t1.text_frame.paragraphs[0]
+    p.text = "CorpSec Bank Sumut"
+    p.font.size = Pt(46)
     p.font.bold = True
     p.font.color.rgb = WHITE
 
-    sub_box = slide.shapes.add_textbox(Inches(0.8), Inches(3.8), Inches(10), Inches(1))
-    p = sub_box.text_frame.paragraphs[0]
-    p.text = subtitle
-    p.font.size = Pt(20)
+    t2 = slide.shapes.add_textbox(Inches(0.7), Inches(3.75), Inches(7.5), Inches(0.8))
+    p = t2.text_frame.paragraphs[0]
+    p.text = "Platform Corporate Secretary Digital"
+    p.font.size = Pt(24)
     p.font.color.rgb = ORANGE
 
-    if extra:
-        ex_box = slide.shapes.add_textbox(Inches(0.8), Inches(5.0), Inches(10), Inches(0.8))
-        p = ex_box.text_frame.paragraphs[0]
-        p.text = extra
-        p.font.size = Pt(14)
-        p.font.color.rgb = RGBColor(0xBC, 0xCD, 0xDC)
+    t3 = slide.shapes.add_textbox(Inches(0.7), Inches(4.8), Inches(7.5), Inches(1.2))
+    tf = t3.text_frame
+    p = tf.paragraphs[0]
+    p.text = "Presentasi Sistem"
+    p.font.size = Pt(18)
+    p.font.color.rgb = RGBColor(0xBC, 0xCD, 0xDC)
+    p2 = tf.add_paragraph()
+    p2.text = "Juli 2026"
+    p2.font.size = Pt(18)
+    p2.font.color.rgb = RGBColor(0xBC, 0xCD, 0xDC)
 
-    add_footer(slide, "Bank Sumut — Corporate Secretary Digital Platform | PRD v0.1")
+    footer(slide, page)
 
 
-def add_content_slide(prs, title: str, bullets: list[str], subtitle: str = ""):
+def content_slide(prs, page: int, title: str, subtitle: str, bullets: list[str]):
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    set_slide_bg(slide, WHITE)
-    add_accent_bar(slide)
-
-    title_box = slide.shapes.add_textbox(Inches(0.6), Inches(0.35), Inches(12), Inches(0.7))
-    p = title_box.text_frame.paragraphs[0]
-    p.text = title
-    p.font.size = Pt(28)
-    p.font.bold = True
-    p.font.color.rgb = NAVY
-
-    line = slide.shapes.add_shape(
-        MSO_SHAPE.RECTANGLE, Inches(0.6), Inches(1.05), Inches(1.5), Inches(0.05)
-    )
-    line.fill.solid()
-    line.fill.fore_color.rgb = ORANGE
-    line.line.fill.background()
-
-    y_start = 1.35
-    if subtitle:
-        sub_box = slide.shapes.add_textbox(Inches(0.6), Inches(y_start), Inches(12), Inches(0.5))
-        p = sub_box.text_frame.paragraphs[0]
-        p.text = subtitle
-        p.font.size = Pt(13)
-        p.font.color.rgb = SLATE
-        y_start += 0.45
-
-    body_box = slide.shapes.add_textbox(Inches(0.6), Inches(y_start), Inches(12), Inches(5.8))
-    tf = body_box.text_frame
-    tf.word_wrap = True
-    for i, item in enumerate(bullets):
-        p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
-        p.text = item
-        p.font.size = Pt(15)
-        p.font.color.rgb = DARK_TEXT
-        p.space_after = Pt(8)
-        if item.startswith("  "):
-            p.level = 1
-            p.font.size = Pt(13)
-            p.font.color.rgb = SLATE
-
-    add_footer(slide, "CorpSec Bank Sumut — PRD Discovery v0.1")
+    set_bg(slide, BG)
+    slide_title(slide, title, subtitle)
+    add_bullets(slide, bullets, size=21)
+    footer(slide, page)
 
 
-def add_table_slide(prs, title: str, headers: list[str], rows: list[list[str]]):
+def two_col_slide(prs, page: int, title: str, left_title: str, left_items: list[str], right_title: str, right_items: list[str]):
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    set_slide_bg(slide, WHITE)
-    add_accent_bar(slide)
+    set_bg(slide, BG)
+    slide_title(slide, title)
 
-    title_box = slide.shapes.add_textbox(Inches(0.6), Inches(0.35), Inches(12), Inches(0.7))
-    p = title_box.text_frame.paragraphs[0]
-    p.text = title
-    p.font.size = Pt(28)
-    p.font.bold = True
-    p.font.color.rgb = NAVY
+    for x, col_title, items in [(0.55, left_title, left_items), (6.85, right_title, right_items)]:
+        card = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(x), Inches(1.55), Inches(5.9), Inches(5.1))
+        card.fill.solid()
+        card.fill.fore_color.rgb = WHITE
+        card.line.color.rgb = RGBColor(0xE2, 0xE8, 0xF0)
+
+        head = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(x), Inches(1.55), Inches(5.9), Inches(0.55))
+        head.fill.solid()
+        head.fill.fore_color.rgb = NAVY
+        head.line.fill.background()
+
+        ht = slide.shapes.add_textbox(Inches(x + 0.25), Inches(1.62), Inches(5.4), Inches(0.45))
+        p = ht.text_frame.paragraphs[0]
+        p.text = col_title
+        p.font.size = Pt(18)
+        p.font.bold = True
+        p.font.color.rgb = WHITE
+
+        add_bullets(slide, items, top=2.3, left=x + 0.3, width=5.3, size=18)
+
+    footer(slide, page)
+
+
+def table_slide(prs, page: int, title: str, subtitle: str, headers: list[str], rows: list[list[str]]):
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+    set_bg(slide, BG)
+    slide_title(slide, title, subtitle)
 
     cols = len(headers)
-    row_h = min(0.42, 5.5 / max(len(rows) + 1, 1))
-    table_shape = slide.shapes.add_table(
-        len(rows) + 1, cols, Inches(0.5), Inches(1.25), Inches(12.3), Inches(row_h * (len(rows) + 1))
-    )
-    table = table_shape.table
+    n = len(rows) + 1
+    h = min(0.55, 4.8 / n)
+    tbl = slide.shapes.add_table(n, cols, Inches(0.55), Inches(1.65), Inches(12.2), Inches(h * n)).table
 
-    for j, header in enumerate(headers):
-        cell = table.cell(0, j)
-        cell.text = header
-        cell.fill.solid()
-        cell.fill.fore_color.rgb = NAVY
-        for paragraph in cell.text_frame.paragraphs:
-            paragraph.font.bold = True
-            paragraph.font.size = Pt(11)
-            paragraph.font.color.rgb = WHITE
+    for j, htxt in enumerate(headers):
+        c = tbl.cell(0, j)
+        c.text = htxt
+        c.fill.solid()
+        c.fill.fore_color.rgb = NAVY
+        for p in c.text_frame.paragraphs:
+            p.font.bold = True
+            p.font.size = Pt(15)
+            p.font.color.rgb = WHITE
 
-    for i, row in enumerate(rows, start=1):
-        for j, value in enumerate(row):
-            cell = table.cell(i, j)
-            cell.text = value
+    for i, row in enumerate(rows, 1):
+        for j, val in enumerate(row):
+            c = tbl.cell(i, j)
+            c.text = val
             if i % 2 == 0:
-                cell.fill.solid()
-                cell.fill.fore_color.rgb = LIGHT_GRAY
-            for paragraph in cell.text_frame.paragraphs:
-                paragraph.font.size = Pt(10)
-                paragraph.font.color.rgb = DARK_TEXT
+                c.fill.solid()
+                c.fill.fore_color.rgb = ORANGE_LIGHT
+            for p in c.text_frame.paragraphs:
+                p.font.size = Pt(14)
+                p.font.color.rgb = TEXT
 
-    add_footer(slide, "CorpSec Bank Sumut — PRD Discovery v0.1")
+    footer(slide, page)
 
 
-def build_presentation() -> Presentation:
+def highlight_slide(prs, page: int, title: str, points: list[tuple[str, str]]):
+    """Big number/card style slide."""
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+    set_bg(slide, BG)
+    slide_title(slide, title)
+
+    cols = len(points)
+    w = 12.2 / cols - 0.2
+    for idx, (num, label) in enumerate(points):
+        x = 0.55 + idx * (w + 0.25)
+        card = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(x), Inches(2.0), Inches(w), Inches(3.8))
+        card.fill.solid()
+        card.fill.fore_color.rgb = WHITE
+        card.line.color.rgb = RGBColor(0xE2, 0xE8, 0xF0)
+
+        nb = slide.shapes.add_textbox(Inches(x), Inches(2.4), Inches(w), Inches(1.2))
+        p = nb.text_frame.paragraphs[0]
+        p.text = num
+        p.font.size = Pt(52)
+        p.font.bold = True
+        p.font.color.rgb = ORANGE
+        p.alignment = PP_ALIGN.CENTER
+
+        lb = slide.shapes.add_textbox(Inches(x + 0.2), Inches(3.8), Inches(w - 0.4), Inches(1.5))
+        tf = lb.text_frame
+        tf.word_wrap = True
+        p = tf.paragraphs[0]
+        p.text = label
+        p.font.size = Pt(17)
+        p.font.color.rgb = TEXT
+        p.alignment = PP_ALIGN.CENTER
+
+    footer(slide, page)
+
+
+def closing_slide(prs, page: int):
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+    set_bg(slide, NAVY)
+
+    bar = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(0), Inches(3.2), Inches(13.333), Inches(0.08))
+    bar.fill.solid()
+    bar.fill.fore_color.rgb = ORANGE
+    bar.line.fill.background()
+
+    t1 = slide.shapes.add_textbox(Inches(0.7), Inches(2.2), Inches(12), Inches(1))
+    p = t1.text_frame.paragraphs[0]
+    p.text = "Terima Kasih"
+    p.font.size = Pt(48)
+    p.font.bold = True
+    p.font.color.rgb = WHITE
+    p.alignment = PP_ALIGN.CENTER
+
+    t2 = slide.shapes.add_textbox(Inches(0.7), Inches(3.55), Inches(12), Inches(0.8))
+    p = t2.text_frame.paragraphs[0]
+    p.text = "CorpSec Bank Sumut — Platform Corporate Secretary Digital"
+    p.font.size = Pt(22)
+    p.font.color.rgb = ORANGE
+    p.alignment = PP_ALIGN.CENTER
+
+    t3 = slide.shapes.add_textbox(Inches(0.7), Inches(4.5), Inches(12), Inches(0.6))
+    p = t3.text_frame.paragraphs[0]
+    p.text = "localhost:3000/login"
+    p.font.size = Pt(18)
+    p.font.color.rgb = RGBColor(0xBC, 0xCD, 0xDC)
+    p.alignment = PP_ALIGN.CENTER
+
+    footer(slide, page)
+
+
+def build():
     prs = Presentation()
     prs.slide_width = Inches(13.333)
     prs.slide_height = Inches(7.5)
 
-    # Slide 1 — Cover
-    add_title_slide(
-        prs,
-        "CorpSec Bank Sumut",
-        "Corporate Secretary Digital Platform",
-        "Presentasi Produk — PRD Discovery v0.1 | Juli 2026",
-    )
+    # 1 Cover
+    cover_slide(prs, 1)
 
-    # Slide 2 — Latar Belakang
-    add_content_slide(
-        prs,
-        "Latar Belakang & Tantangan",
+    # 2 Latar belakang
+    content_slide(
+        prs, 2,
+        "Kenapa Sistem Ini Dibuat?",
+        "Permasalahan yang dihadapi Corporate Secretary",
         [
-            "Corporate Secretary Bank Sumut mengelola memorandum, agenda Direksi, rapat, dan compliance.",
-            "Proses manual masih mengandalkan kertas & email — approval lambat, sulit dilacak.",
-            "PRD Discovery v0.1 mendefinisikan kebutuhan digitalisasi end-to-end CorpSec.",
-            "Solusi: platform terintegrasi dengan workflow 7 level, AI review, & SLA monitoring.",
-        ],
-        subtitle="Mengapa platform digital CorpSec dibutuhkan?",
-    )
-
-    # Slide 3 — Visi & Ruang Lingkup PRD
-    add_content_slide(
-        prs,
-        "Visi Produk & Ruang Lingkup PRD",
-        [
-            "Satu platform untuk seluruh operasional Corporate Secretary Bank Sumut.",
-            "Memorandum digital — upload PDF hingga keputusan final Direksi/Komisaris.",
-            "AI compliance review dengan referensi SMD & regulasi OJK/BI.",
-            "Modul terintegrasi: Dashboard, Agenda, Rapat, Media, Knowledge, SLA, Laporan.",
-            "Tanda tangan digital & notifikasi in-app di setiap tahap approval.",
+            "Memorandum masih banyak lewat kertas dan email, sehingga sulit dilacak.",
+            "Proses persetujuan memakan waktu karena harus menunggu antar divisi.",
+            "Agenda Direksi dan catatan rapat belum terpusat di satu tempat.",
+            "Belum ada pemantauan SLA yang jelas untuk setiap memorandum.",
+            "CorpSec Bank Sumut butuh satu sistem digital yang rapi dan mudah dipakai.",
         ],
     )
 
-    # Slide 4 — Tech Stack
-    add_table_slide(
-        prs,
-        "Arsitektur Teknologi",
-        ["Layer", "Teknologi", "Fungsi"],
+    # 3 Apa itu sistem
+    highlight_slide(
+        prs, 3,
+        "Apa Itu CorpSec Bank Sumut?",
         [
-            ["Frontend", "Next.js 16 + React 19", "App Router, UI responsif"],
-            ["Database", "SQLite + Drizzle ORM", "11 tabel, auto-seed demo"],
-            ["Styling", "Tailwind CSS v4", "Brand navy & orange Bank Sumut"],
-            ["Grafik", "Recharts", "Dashboard & laporan statistik"],
-            ["PDF & AI", "pdf-parse + RAG", "Ekstraksi teks & analisa compliance"],
-            ["Auth", "Cookie Session + RBAC", "7 role, middleware guard"],
+            ("8", "Modul\nOperasional"),
+            ("7", "Tahap\nPersetujuan"),
+            ("7", "Level\nPengguna"),
+            ("1", "Platform\nTerpadu"),
         ],
     )
 
-    # Slide 5 — Modul Website
-    add_table_slide(
-        prs,
-        "Modul Utama Website",
-        ["Modul", "Route", "Fungsi"],
+    # 4 Fitur utama
+    two_col_slide(
+        prs, 4,
+        "Fitur Utama Sistem",
+        "Yang Bisa Dilakukan CorpSec",
         [
-            ["Dashboard", "/dashboard", "Statistik, grafik, notifikasi, aksi cepat"],
-            ["Memorandum", "/dashboard/memorandum", "Upload PDF, workflow, AI review"],
-            ["Agenda", "/agenda", "Jadwal & persiapan kegiatan Direksi"],
-            ["Rapat", "/rapat", "Notulen & tindak lanjut rapat"],
-            ["Media", "/media", "Berita & analisis sentimen"],
-            ["Knowledge", "/knowledge", "Dokumen internal & regulasi (RAG)"],
-            ["SLA & Laporan", "/sla, /laporan", "Monitoring SLA & KPI PRD"],
+            "Lihat ringkasan agenda & memorandum di dashboard",
+            "Terima dan tinjau memorandum dari divisi",
+            "Kelola jadwal kegiatan Direksi",
+            "Pantau SLA dan laporan kinerja",
+            "Cek berita dan regulasi terkait bank",
+        ],
+        "Yang Bisa Dilakukan Divisi Lain",
+        [
+            "Pengusul: kirim memorandum PDF",
+            "Pimpinan Bidang: setujui atau tolak",
+            "Sekretaris: teruskan ke Direksi/Komisaris",
+            "Direksi & Komisaris: beri keputusan",
+            "Semua pihak bisa cek status dokumen",
         ],
     )
 
-    # Slide 6 — Dashboard & Memorandum
-    add_content_slide(
-        prs,
-        "Dashboard & Manajemen Memorandum",
+    # 5 Modul
+    table_slide(
+        prs, 5,
+        "Menu & Halaman Sistem",
+        "Ringkasan modul yang tersedia di website",
+        ["Menu", "Alamat", "Kegunaan"],
         [
-            "Dashboard CorpSec — pusat kendali operasional:",
-            "  • Stat cards: agenda, memorandum pending, SLA, notifikasi regulator",
-            "  • Grafik: statistik memorandum, tren bulanan, tren SLA",
-            "  • Notifikasi keputusan Pimpinan Bidang & aksi cepat upload",
-            "Manajemen Memorandum:",
-            "  • Upload PDF (max 20 MB) + metadata (perihal, divisi, urgensi)",
-            "  • Indikator baca, status workflow, aging, AI score",
-            "  • PDF viewer, workflow stepper, tanda tangan digital",
+            ["Dashboard", "/dashboard", "Ringkasan harian CorpSec"],
+            ["Memorandum", "/dashboard/memorandum", "Upload & kelola memorandum"],
+            ["Agenda", "/agenda", "Jadwal kegiatan Direksi"],
+            ["Rapat", "/rapat", "Notulen & tindak lanjut"],
+            ["Media", "/media", "Pantau berita & sentimen"],
+            ["Knowledge", "/knowledge", "Arsip dokumen & regulasi"],
+            ["SLA & Laporan", "/sla, /laporan", "Pantau target & statistik"],
         ],
     )
 
-    # Slide 7 — Workflow 7 Level
-    add_content_slide(
-        prs,
-        "Workflow Persetujuan 7 Level",
+    # 6 Memorandum
+    content_slide(
+        prs, 6,
+        "Modul Memorandum",
+        "Dari upload PDF sampai keputusan akhir",
         [
-            "1. Divisi Pengusul — Upload & kirim memorandum PDF",
-            "2. Corporate Secretary — Analisa AI & review compliance",
-            "3. Pemimpin Bidang — Approve/tolak + tanda tangan digital",
-            "4. Sekretaris Direksi/Komisaris — Terima & forward ke board",
-            "5. Direksi (5 anggota) / Komisaris (3 anggota) — Keputusan board",
-            "6. CorpSec — Finalisasi keputusan board",
-            "7. Kembali ke Pengusul — Notifikasi keputusan final",
-        ],
-        subtitle="Cabang rute: Direksi (via SekDir) atau Komisaris (via SekKom)",
-    )
-
-    # Slide 8 — RBAC
-    add_table_slide(
-        prs,
-        "Role-Based Access Control — 7 Role",
-        ["Role", "Route", "Akses Utama"],
-        [
-            ["Divisi Pengusul", "/pengusul", "Kirim PDF, riwayat keputusan"],
-            ["Corporate Secretary", "/dashboard", "Akses penuh seluruh modul"],
-            ["Pemimpin Bidang", "/pimpinan-bidang", "Review, approve/tolak + TTD"],
-            ["Sekretaris Direksi", "/sekdireksi", "Terima & forward ke Direksi"],
-            ["Sekretaris Komisaris", "/sekretaris-komisaris", "Forward ke Komisaris"],
-            ["Direksi", "/direksi", "Keputusan + tanda tangan digital"],
-            ["Komisaris", "/komisaris", "Keputusan + disposisi"],
+            "Divisi mengunggah memorandum dalam bentuk PDF.",
+            "CorpSec menerima dokumen, membaca isi, dan meninjau kelengkapan.",
+            "Sistem membantu merangkum isi memorandum dan menandai hal penting.",
+            "Setiap memorandum punya status: menunggu, sedang ditinjau, disetujui, atau ditolak.",
+            "Dokumen yang belum dibaca ditandai agar tidak terlewat.",
+            "Riwayat keputusan tersimpan sehingga bisa dicek kapan saja.",
         ],
     )
 
-    # Slide 9 — Akun Demo
-    add_table_slide(
-        prs,
-        "Akun Demo untuk Live Demo",
-        ["Role", "Username", "Password"],
+    # 7 Workflow
+    content_slide(
+        prs, 7,
+        "Alur Persetujuan Memorandum",
+        "7 tahap dari pengusul sampai keputusan akhir",
+        [
+            "1. Divisi Pengusul — mengirim memorandum",
+            "2. Corporate Secretary — meninjau & menyiapkan dokumen",
+            "3. Pemimpin Bidang — menyetujui atau menolak",
+            "4. Sekretaris Direksi/Komisaris — meneruskan ke pimpinan",
+            "5. Direksi atau Komisaris — memberi keputusan",
+            "6. CorpSec — menyelesaikan proses sesuai keputusan",
+            "7. Kembali ke Pengusul — pemberitahuan hasil akhir",
+        ],
+    )
+
+    # 8 Role
+    table_slide(
+        prs, 8,
+        "Siapa Saja Pengguna Sistem?",
+        "Setiap role punya akses sesuai tugasnya",
+        ["Peran", "Halaman Utama", "Tugas Utama"],
+        [
+            ["Divisi Pengusul", "/pengusul", "Kirim memorandum, lihat riwayat"],
+            ["Corporate Secretary", "/dashboard", "Kelola seluruh proses CorpSec"],
+            ["Pemimpin Bidang", "/pimpinan-bidang", "Tinjau & putuskan memorandum"],
+            ["Sekretaris Direksi", "/sekdireksi", "Teruskan ke Direksi"],
+            ["Sekretaris Komisaris", "/sekretaris-komisaris", "Teruskan ke Komisaris"],
+            ["Direksi", "/direksi", "Berikan keputusan & tanda tangan"],
+            ["Komisaris", "/komisaris", "Berikan keputusan"],
+        ],
+    )
+
+    # 9 Demo
+    table_slide(
+        prs, 9,
+        "Akun untuk Coba Sistem",
+        "Gunakan akun berikut saat demo atau presentasi",
+        ["Peran", "Username", "Password"],
         [
             ["Divisi Pengusul", "pengusul", "pengusul123"],
             ["Corporate Secretary", "corpsec", "corpsec123"],
@@ -303,97 +413,102 @@ def build_presentation() -> Presentation:
         ],
     )
 
-    # Slide 10 — AI Compliance
-    add_content_slide(
-        prs,
-        "AI Compliance Review",
+    # 10 AI
+    content_slide(
+        prs, 10,
+        "Bantuan Tinjauan Memorandum",
+        "Fitur pendukung agar CorpSec lebih cepat bekerja",
         [
-            "Otomatis saat upload PDF — ekstraksi teks via pdf-parse.",
-            "Output analisa AI:",
-            "  • SMD Document ID (SMD-BSM-{tahun}-{seq})",
-            "  • Ringkasan eksekutif terstruktur",
-            "  • Risk Score (0–90) & Compliance Score (85–99%)",
-            "  • Referensi regulasi dari Knowledge Base (RAG)",
-            "CorpSec dapat edit ringkasan, download review, & re-upload dokumen.",
-            "Knowledge Base: SK/SE/SOP internal + regulasi OJK/BI sebagai corpus RAG.",
+            "Saat PDF diunggah, sistem membaca isi dokumen secara otomatis.",
+            "CorpSec mendapat ringkasan singkat isi memorandum.",
+            "Sistem menandai poin penting dan hal yang perlu diperhatikan.",
+            "Referensi regulasi yang relevan ditampilkan sebagai acuan.",
+            "CorpSec tetap bisa mengubah ringkasan sebelum dokumen dilanjutkan.",
+            "Tujuannya: mempercepat peninjauan, bukan menggantikan keputusan manusia.",
         ],
     )
 
-    # Slide 11 — Agenda, Rapat, Media
-    add_content_slide(
-        prs,
-        "Agenda, Rapat & Media Monitoring",
+    # 11 Modul lain
+    two_col_slide(
+        prs, 11,
+        "Modul Pendukung Lainnya",
+        "Agenda & Rapat",
         [
-            "Agenda Direksi — CRUD jadwal kegiatan, prioritas, catatan persiapan.",
-            "Meeting Management — daftar rapat, notulen, tindak lanjut dengan assignee & due date.",
-            "Media Monitoring — berita Bank Sumut, regulasi, makroekonomi, perbankan.",
-            "  • Analisis sentimen: Positif / Netral / Negatif",
-            "  • Sumber: Bisnis Indonesia, Kontan, Reuters, dll.",
-            "Notifikasi regulator OJK/BI ditampilkan di dashboard CorpSec.",
+            "Buat jadwal kegiatan Direksi",
+            "Catat lokasi, waktu, dan prioritas",
+            "Simpan notulen rapat",
+            "Pantau tindak lanjut beserta penanggung jawab",
+        ],
+        "Media & Arsip Dokumen",
+        [
+            "Pantau berita seputar Bank Sumut",
+            "Lihat sentimen berita: positif, netral, negatif",
+            "Simpan SK, SE, SOP, dan regulasi",
+            "Jadi acuan saat meninjau memorandum",
         ],
     )
 
-    # Slide 12 — SLA & KPI
-    add_table_slide(
-        prs,
-        "SLA Monitoring & KPI Success Metrics",
-        ["KPI (PRD)", "Target", "Implementasi"],
+    # 12 KPI
+    table_slide(
+        prs, 12,
+        "Target Kinerja Sistem",
+        "Indikator yang dipantau sesuai kebutuhan CorpSec",
+        ["Indikator", "Target", "Keterangan"],
         [
-            ["Resume AI", "< 5 menit", "Simulasi ~2 menit otomatis"],
-            ["Waktu Approval", "-50%", "Workflow digital 7 level"],
-            ["Penggunaan Kertas", "-90%", "Upload & review PDF digital"],
-            ["Agenda Terdokumentasi", "100%", "Modul agenda terintegrasi"],
-            ["SLA Memorandum", "≥ 95%", "Monitoring real-time di /sla"],
-            ["Memorandum Terlambat", "0", "Alert SLA breached"],
+            ["Waktu tinjauan memorandum", "< 5 menit", "Proses baca & rangkum dokumen"],
+            ["Proses persetujuan", "Lebih cepat", "Alur digital, tidak lewat kertas"],
+            ["Penggunaan kertas", "Berkurang", "Semua lewat upload PDF"],
+            ["Agenda Direksi", "Tercatat", "Semua jadwal masuk sistem"],
+            ["SLA memorandum", "≥ 95%", "Dipantau di menu SLA"],
+            ["Keterlambatan", "Minim", "Ada peringatan jika melewati batas waktu"],
         ],
     )
 
-    # Slide 13 — Desain UI
-    add_content_slide(
-        prs,
-        "Desain UI — Branding Bank Sumut",
+    # 13 Tampilan
+    content_slide(
+        prs, 13,
+        "Tampilan Website",
+        "Desain mengikuti identitas Bank Sumut",
         [
-            "Identitas visual: Navy (#0C2340) + Orange (#F58220).",
-            "Login dengan hero panel gambar gedung Bank Sumut.",
-            "Sidebar navy gelap, navigasi aktif oranye, logo Bank Sumut.",
-            "Dashboard & memorandum dengan banner hero corporate.",
-            "Komponen konsisten: workflow stepper, badge status, stat cards, grafik.",
-            "Responsive — mobile sidebar dengan hamburger menu.",
-        ],
-        subtitle="Modern, simple, corporate",
-    )
-
-    # Slide 14 — Kesimpulan
-    add_content_slide(
-        prs,
-        "Kesimpulan",
-        [
-            "Platform CorpSec Bank Sumut mengimplementasikan seluruh ruang lingkup PRD v0.1.",
-            "Workflow 7 level + AI review + tanda tangan digital + SLA terintegrasi.",
-            "7 role RBAC — dari Divisi Pengusul hingga Direksi/Komisaris.",
-            "8 modul operasional dalam satu platform terpadu.",
-            "UI modern dengan branding Bank Sumut & data demo lengkap.",
-            "Prototype siap demo: http://localhost:3000/login",
+            "Warna utama: biru navy dan oranye sesuai branding Bank Sumut.",
+            "Tampilan bersih, enak dibaca, dan mudah dinavigasi.",
+            "Halaman login menampilkan gambar gedung Bank Sumut.",
+            "Dashboard dilengkapi banner dan ringkasan informasi penting.",
+            "Setiap role melihat menu yang sesuai dengan tugasnya.",
+            "Bisa diakses lewat laptop maupun layar yang lebih kecil.",
         ],
     )
 
-    # Slide 15 — Penutup
-    add_title_slide(
-        prs,
-        "Terima Kasih",
-        "CorpSec Bank Sumut — Digital Platform",
-        "Demo: http://localhost:3000/login",
+    # 14 Tech (simple, not jargon-heavy)
+    content_slide(
+        prs, 14,
+        "Teknologi yang Digunakan",
+        "Dasar pembangunan sistem",
+        [
+            "Website dibangun dengan Next.js — framework web modern.",
+            "Data disimpan di database SQLite, cukup untuk kebutuhan demo.",
+            "Tampilan dibuat dengan Tailwind CSS, mengikuti warna Bank Sumut.",
+            "Grafik di dashboard menggunakan Recharts.",
+            "File memorandum disimpan dalam format PDF.",
+            "Sistem login dengan pembagian akses per role.",
+        ],
     )
+
+    # 15 Closing
+    closing_slide(prs, 15)
 
     return prs
 
 
 def main():
-    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    prs = build_presentation()
+    prs = build()
     prs.save(str(OUTPUT))
-    print(f"Presentasi berhasil dibuat: {OUTPUT}")
-    print(f"Total slide: {len(prs.slides)}")
+    # Also save copy in docs/
+    docs_copy = OUTPUT.parent / "docs" / "CorpSec-Bank-Sumut-Presentasi.pptx"
+    docs_copy.parent.mkdir(exist_ok=True)
+    prs.save(str(docs_copy))
+    print(f"Saved: {OUTPUT}")
+    print(f"Slides: {len(prs.slides)}")
 
 
 if __name__ == "__main__":
