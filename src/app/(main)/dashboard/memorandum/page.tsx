@@ -33,7 +33,7 @@ export default async function MemorandumPage() {
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <p className="text-sm text-slate-500">{items.length} memorandum terdaftar</p>
           <Link
-            href="/memorandum/baru"
+            href="/dashboard/memorandum/baru"
             className="inline-flex items-center gap-2 rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-800"
           >
             <Upload className="h-4 w-4" />
@@ -71,7 +71,7 @@ export default async function MemorandumPage() {
                     </td>
                     <td className="px-4 py-3">
                       <Link
-                        href={`/memorandum/${memo.id}`}
+                        href={`/dashboard/memorandum/${memo.id}`}
                         className="font-mono text-xs font-medium text-emerald-700 hover:underline"
                       >
                         {memo.number}
@@ -79,7 +79,7 @@ export default async function MemorandumPage() {
                     </td>
                     <td className="px-4 py-3">
                       <Link
-                        href={`/memorandum/${memo.id}`}
+                        href={`/dashboard/memorandum/${memo.id}`}
                         className={`hover:text-emerald-700 ${
                           !memo.isRead ? "font-bold text-slate-900" : "font-medium text-slate-900"
                         }`}

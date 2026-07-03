@@ -28,7 +28,7 @@ export default function NewMemorandumPage() {
     });
     if (res.ok) {
       const data = await res.json();
-      router.push(`/memorandum/${data.id}`);
+      router.push(`/dashboard/memorandum/${data.id}`);
       router.refresh();
     } else {
       const data = await res.json().catch(() => ({}));

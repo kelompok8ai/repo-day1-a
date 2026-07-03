@@ -54,7 +54,7 @@ export default async function MemorandumDetailPage({
       <Header title={memo.title} subtitle={memo.number} session={session} />
       <div className="space-y-6 p-6">
         <Link
-          href="/memorandum"
+          href="/dashboard/memorandum"
           className="inline-flex items-center gap-1 text-sm text-emerald-700 hover:underline"
         >
           <ArrowLeft className="h-4 w-4" />

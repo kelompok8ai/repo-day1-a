@@ -40,7 +40,7 @@ export default async function DashboardPage() {
       <div className="space-y-6 p-6">
         {/* Aksi Cepat CorpSec */}
         <div className="grid gap-4 sm:grid-cols-2">
-          <Link href="/memorandum/baru">
+          <Link href="/dashboard/memorandum/baru">
             <Card className="h-full border-emerald-200 transition hover:border-emerald-400 hover:shadow-md">
               <CardContent className="flex items-center gap-4 py-5">
                 <div className="rounded-xl bg-emerald-100 p-3">
@@ -87,7 +87,7 @@ export default async function DashboardPage() {
               {returnedMemos.map((memo) => (
                 <Link
                   key={memo.id}
-                  href={`/memorandum/${memo.id}`}
+                  href={`/dashboard/memorandum/${memo.id}`}
                   className="block rounded-lg border border-orange-200 bg-white p-3 transition hover:border-emerald-300"
                 >
                   <div className="flex items-start justify-between gap-2">
@@ -224,7 +224,7 @@ export default async function DashboardPage() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Memorandum Menunggu Keputusan</CardTitle>
-              <Link href="/memorandum" className="text-xs font-medium text-emerald-700 hover:underline">
+              <Link href="/dashboard/memorandum" className="text-xs font-medium text-emerald-700 hover:underline">
                 Lihat semua →
               </Link>
             </CardHeader>
@@ -238,7 +238,7 @@ export default async function DashboardPage() {
                     return (
                       <li key={memo.id}>
                         <Link
-                          href={`/memorandum/${memo.id}`}
+                          href={`/dashboard/memorandum/${memo.id}`}
                           className="flex items-start gap-3 rounded-lg border border-slate-100 p-3 transition hover:border-emerald-200 hover:bg-emerald-50/50"
                         >
                           <div className="min-w-0 flex-1">
@@ -280,7 +280,7 @@ export default async function DashboardPage() {
                 <ul className="space-y-2">
                   {data.highUrgencyMemos.map((m) => (
                     <li key={m.id} className="text-sm">
-                      <Link href={`/memorandum/${m.id}`} className="font-medium text-slate-900 hover:text-emerald-700">
+                      <Link href={`/dashboard/memorandum/${m.id}`} className="font-medium text-slate-900 hover:text-emerald-700">
                         {m.title}
                       </Link>
                       <p className="text-xs text-slate-500">{m.number}</p>
@@ -305,7 +305,7 @@ export default async function DashboardPage() {
                 <ul className="space-y-2">
                   {data.aiReviewMemos.map((m) => (
                     <li key={m.id} className="text-sm">
-                      <Link href={`/memorandum/${m.id}`} className="font-medium text-slate-900 hover:text-emerald-700">
+                      <Link href={`/dashboard/memorandum/${m.id}`} className="font-medium text-slate-900 hover:text-emerald-700">
                         {m.title}
                       </Link>
                       <Badge className={`${MEMORANDUM_STATUS.ai_review.color} ml-2`}>

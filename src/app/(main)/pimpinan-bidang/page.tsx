@@ -115,7 +115,7 @@ export default async function PimpinanBidangPage() {
                         {memo.submittedAt && `Diajukan ${formatDate(memo.submittedAt)}`}
                       </div>
                       <Link
-                        href={`/memorandum/${memo.id}`}
+                        href={`/dashboard/memorandum/${memo.id}`}
                         className="text-xs font-medium text-emerald-700 hover:underline"
                       >
                         Lihat detail →
