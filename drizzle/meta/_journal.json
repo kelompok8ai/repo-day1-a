@@ -17,6 +17,13 @@
       "breakpoints": true
     },
     {
+      "idx": 2,
+      "version": "6",
+      "when": 1783046797391,
+      "tag": "0002_cheerful_skreet",
+      "breakpoints": true
+    },
+    {
       "idx": 3,
       "version": "6",
       "when": 1783060000000,

@@ -126,12 +126,13 @@ export default async function PimpinanBidangPage() {
                       <p className="mb-2 text-xs font-medium text-slate-600">
                         Aksi Pimpinan Bidang:
                       </p>
-                      <MemorandumActions
+                      <MemorandumWorkflowPanel
                         id={memo.id}
                         status={memo.status}
                         hasAiSummary={!!memo.aiSummary}
                         role="pimpinan_bidang"
                         pimpinanDecision={memo.pimpinanDecision}
+                        userName={session?.name}
                       />
                     </div>
                   </CardContent>

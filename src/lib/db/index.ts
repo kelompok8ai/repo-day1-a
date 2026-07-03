@@ -5,6 +5,7 @@ import fs from "fs";
 import path from "path";
 import * as schema from "./schema";
 import { seedDatabase } from "./seed";
+import { repairDatabaseSchema } from "./repair";
 
 const globalForDb = globalThis as unknown as {
   sqlite?: Database.Database;
@@ -32,6 +33,7 @@ export function getDb() {
     globalForDb.sqlite = createSqlite();
     const db = drizzle(globalForDb.sqlite, { schema });
     migrate(db, { migrationsFolder: path.join(process.cwd(), "drizzle") });
+    repairDatabaseSchema(globalForDb.sqlite);
 
     if (!globalForDb.seeded) {
       seedDatabase(db);

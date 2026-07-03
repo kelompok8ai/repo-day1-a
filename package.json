@@ -11,7 +11,8 @@
     "start": "next start",
     "lint": "eslint",
     "db:generate": "drizzle-kit generate",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "db:reset": "node scripts/reset-db.mjs && echo 'Database reset. Restart dev server.'"
   },
   "dependencies": {
     "better-sqlite3": "^12.11.1",
