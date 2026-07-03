@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:stop": "node scripts/stop-dev-server.mjs",
+    "dev:restart": "npm run dev:stop && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
