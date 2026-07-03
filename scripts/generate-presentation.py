@@ -22,6 +22,30 @@ GREEN_SOFT = RGBColor(0xF0, 0xFD, 0xF4)
 ROOT = Path(__file__).resolve().parent.parent
 OUTPUT = ROOT / "CorpSec-Bank-Sumut-Presentasi.pptx"
 SCREENSHOTS = ROOT / "docs" / "screenshots"
+LOGO = ROOT / "docs" / "logo-banksumut.png"
+
+
+def ensure_logo():
+    """Convert SVG logo to PNG if needed."""
+    if LOGO.exists():
+        return
+    svg = ROOT / "public" / "images" / "logo-banksumut.svg"
+    if not svg.exists():
+        return
+    try:
+        import cairosvg
+        cairosvg.svg2png(url=str(svg), write_to=str(LOGO), output_width=240, output_height=240)
+    except Exception:
+        pass
+
+
+def add_logo(slide, top=0.22, right=0.4, size=0.52):
+    """Bank Sumut logo — pojok kanan atas setiap slide."""
+    ensure_logo()
+    if not LOGO.exists():
+        return
+    left = 13.333 - right - size
+    slide.shapes.add_picture(str(LOGO), Inches(left), Inches(top), width=Inches(size), height=Inches(size))
 
 
 def bg(slide, color):
@@ -34,7 +58,12 @@ def footer(slide, n: int):
     bar.fill.solid()
     bar.fill.fore_color.rgb = NAVY
     bar.line.fill.background()
-    l = slide.shapes.add_textbox(Inches(0.5), Inches(7.1), Inches(6), Inches(0.35))
+
+    ensure_logo()
+    if LOGO.exists():
+        slide.shapes.add_picture(str(LOGO), Inches(0.18), Inches(7.06), width=Inches(0.34), height=Inches(0.34))
+
+    l = slide.shapes.add_textbox(Inches(0.58), Inches(7.1), Inches(6), Inches(0.35))
     p = l.text_frame.paragraphs[0]
     p.text = "CorpSec Bank Sumut — Business Problem Canvas"
     p.font.size = Pt(11)
@@ -46,6 +75,7 @@ def footer(slide, n: int):
     p.font.size = Pt(11)
     p.font.color.rgb = WHITE
     p.alignment = PP_ALIGN.RIGHT
+    add_logo(slide)
 
 
 def title_block(slide, title: str, subtitle: str = ""):
@@ -144,6 +174,16 @@ def cover(prs, n):
     p2.text = "PRD Discovery v0.1 — Bank Sumut"
     p2.font.size = Pt(16)
     p2.font.color.rgb = RGBColor(0xBC, 0xCD, 0xDC)
+
+    ensure_logo()
+    if LOGO.exists():
+        s.shapes.add_picture(str(LOGO), Inches(0.7), Inches(0.55), width=Inches(0.75), height=Inches(0.75))
+        brand = s.shapes.add_textbox(Inches(1.6), Inches(0.62), Inches(4), Inches(0.6))
+        p = brand.text_frame.paragraphs[0]
+        p.text = "Bank Sumut"
+        p.font.size = Pt(18)
+        p.font.bold = True
+        p.font.color.rgb = WHITE
 
     footer(s, n)
 
@@ -413,6 +453,16 @@ def closing(prs, n):
     p.font.size = Pt(16)
     p.font.color.rgb = RGBColor(0xBC, 0xCD, 0xDC)
     p.alignment = PP_ALIGN.CENTER
+
+    ensure_logo()
+    if LOGO.exists():
+        s.shapes.add_picture(str(LOGO), Inches(0.7), Inches(0.55), width=Inches(0.75), height=Inches(0.75))
+        brand = s.shapes.add_textbox(Inches(1.6), Inches(0.62), Inches(4), Inches(0.6))
+        p = brand.text_frame.paragraphs[0]
+        p.text = "Bank Sumut"
+        p.font.size = Pt(18)
+        p.font.bold = True
+        p.font.color.rgb = WHITE
 
     footer(s, n)
 
