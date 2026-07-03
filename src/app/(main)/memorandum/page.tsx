@@ -1,13 +1,15 @@
 import Link from "next/link";
-import { Plus, Sparkles } from "lucide-react";
+import { Plus, Sparkles, Upload } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Badge } from "@/components/ui/Badge";
 import { ReadIndicator } from "@/components/memorandum/ReadIndicator";
 import { getAllMemorandum } from "@/lib/db/queries";
+import { getSession } from "@/lib/auth";
 import { MEMORANDUM_STATUS, URGENCY } from "@/lib/constants";
 import { formatDate, daysSince } from "@/lib/utils";
 
-export default function MemorandumPage() {
+export default async function MemorandumPage() {
+  const session = await getSession();
   const items = getAllMemorandum();
   const unreadCount = items.filter((m) => !m.isRead).length;
 
@@ -16,6 +18,7 @@ export default function MemorandumPage() {
       <Header
         title="Manajemen Memorandum"
         subtitle="Kelola memorandum, analisa AI, dan alur persetujuan"
+        session={session ?? undefined}
       />
       <div className="p-6">
         <div className="mb-4 flex flex-wrap items-center gap-4 text-xs text-slate-500">
@@ -27,13 +30,13 @@ export default function MemorandumPage() {
           </span>
         </div>
 
-        <div className="mb-6 flex items-center justify-between">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <p className="text-sm text-slate-500">{items.length} memorandum terdaftar</p>
           <Link
             href="/memorandum/baru"
-            className="inline-flex items-center gap-2 rounded-lg bg-emerald-700 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-800"
+            className="inline-flex items-center gap-2 rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-800"
           >
-            <Plus className="h-4 w-4" />
+            <Upload className="h-4 w-4" />
             Upload Memorandum
           </Link>
         </div>

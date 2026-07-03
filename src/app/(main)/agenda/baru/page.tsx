@@ -42,7 +42,7 @@ export default function NewAgendaPage() {
 
   return (
     <>
-      <Header title="Tambah Agenda" subtitle="Buat jadwal kegiatan Direksi baru" />
+      <Header title="Buat Jadwal & Agenda Direksi" subtitle="Tambah kegiatan dan jadwal rapat Direksi" />
       <div className="mx-auto max-w-2xl p-6">
         <Card>
           <CardContent>
@@ -129,7 +129,7 @@ export default function NewAgendaPage() {
                   disabled={loading}
                   className="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-800 disabled:opacity-50"
                 >
-                  {loading ? "Menyimpan..." : "Simpan Agenda"}
+                  {loading ? "Menyimpan..." : "Simpan Jadwal & Agenda"}
                 </button>
                 <button
                   type="button"

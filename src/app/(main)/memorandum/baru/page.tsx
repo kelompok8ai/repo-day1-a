@@ -31,8 +31,8 @@ export default function NewMemorandumPage() {
   return (
     <>
       <Header
-        title="Buat Memorandum"
-        subtitle="Upload scan/file memorandum untuk analisa AI via SMD & regulasi"
+        title="Upload Memorandum"
+        subtitle="Corporate Secretary — upload scan/file untuk analisa AI via SMD & regulasi"
       />
       <div className="mx-auto max-w-2xl p-6">
         <Card>

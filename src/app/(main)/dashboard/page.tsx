@@ -9,6 +9,8 @@ import {
   Bell,
   ListTodo,
   TrendingUp,
+  Upload,
+  Plus,
 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Card, CardContent, CardHeader, CardTitle, StatCard } from "@/components/ui/Card";
@@ -36,6 +38,40 @@ export default async function DashboardPage() {
         session={session ?? undefined}
       />
       <div className="space-y-6 p-6">
+        {/* Aksi Cepat CorpSec */}
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Link href="/memorandum/baru">
+            <Card className="h-full border-emerald-200 transition hover:border-emerald-400 hover:shadow-md">
+              <CardContent className="flex items-center gap-4 py-5">
+                <div className="rounded-xl bg-emerald-100 p-3">
+                  <Upload className="h-7 w-7 text-emerald-700" />
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-900">Upload Memorandum</p>
+                  <p className="text-sm text-slate-500">
+                    Upload scan/file memorandum untuk analisa AI
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+          <Link href="/agenda/baru">
+            <Card className="h-full border-blue-200 transition hover:border-blue-400 hover:shadow-md">
+              <CardContent className="flex items-center gap-4 py-5">
+                <div className="rounded-xl bg-blue-100 p-3">
+                  <Plus className="h-7 w-7 text-blue-700" />
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-900">Buat Jadwal & Agenda Direksi</p>
+                  <p className="text-sm text-slate-500">
+                    Tambah kegiatan dan jadwal rapat Direksi
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+        </div>
+
         {(unreadNotifs.length > 0 || returnedMemos.length > 0) && (
           <Card className="border-orange-200 bg-orange-50/50">
             <CardHeader>

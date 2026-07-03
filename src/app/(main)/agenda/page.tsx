@@ -1,13 +1,15 @@
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { Plus, Upload } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { getAllAgenda } from "@/lib/db/queries";
+import { getSession } from "@/lib/auth";
 import { URGENCY } from "@/lib/constants";
 import { formatDate, formatTimeRange } from "@/lib/utils";
 
-export default function AgendaPage() {
+export default async function AgendaPage() {
+  const session = await getSession();
   const items = getAllAgenda();
 
   return (
@@ -15,16 +17,17 @@ export default function AgendaPage() {
       <Header
         title="Manajemen Agenda Direksi"
         subtitle="Kelola jadwal dan persiapan kegiatan Direksi"
+        session={session ?? undefined}
       />
       <div className="p-6">
-        <div className="mb-6 flex items-center justify-between">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <p className="text-sm text-slate-500">{items.length} agenda terdaftar</p>
           <Link
             href="/agenda/baru"
-            className="inline-flex items-center gap-2 rounded-lg bg-emerald-700 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-800"
+            className="inline-flex items-center gap-2 rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-800"
           >
             <Plus className="h-4 w-4" />
-            Tambah Agenda
+            Buat Jadwal & Agenda Direksi
           </Link>
         </div>
 

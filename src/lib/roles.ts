@@ -32,8 +32,9 @@ export const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
   corpsec: [
     { href: "/dashboard", label: "Dashboard", icon: "LayoutDashboard" },
     { href: "/memorandum", label: "Memorandum", icon: "FileText" },
-    { href: "/memorandum/baru", label: "Buat Memorandum", icon: "Plus" },
+    { href: "/memorandum/baru", label: "Upload Memorandum", icon: "Upload" },
     { href: "/agenda", label: "Agenda Direksi", icon: "Calendar" },
+    { href: "/agenda/baru", label: "Buat Jadwal Agenda", icon: "Plus" },
     { href: "/rapat", label: "Rapat", icon: "Users" },
     { href: "/media", label: "Media Monitoring", icon: "Newspaper" },
     { href: "/knowledge", label: "Knowledge Base", icon: "BookOpen" },
