@@ -58,10 +58,10 @@ export default async function PengusulHomePage() {
               <div>
                 <p className="text-sm font-medium text-slate-900">Petunjuk Penggunaan</p>
                 <ul className="mt-2 list-inside list-disc space-y-1 text-sm text-slate-600">
-                  <li>Upload scan memorandum dalam format PDF, DOC, atau gambar</li>
-                  <li>Isi No. Memorandum, Tanggal, dan Perihal jika hardcopy sudah diserahkan</li>
-                  <li>Setelah submit, memorandum akan diteruskan ke Corporate Secretary</li>
-                  <li>Anda hanya dapat melihat riwayat pengiriman Anda sendiri</li>
+                  <li>Upload memorandum dalam format PDF</li>
+                  <li>Isi subjek dan catatan pendukung</li>
+                  <li>Setelah submit, memorandum diteruskan ke Corporate Secretary untuk analisa AI</li>
+                  <li>Anda akan menerima notifikasi keputusan akhir (disetujui/ditolak)</li>
                 </ul>
               </div>
             </div>

@@ -8,6 +8,7 @@ export const users = sqliteTable("users", {
   password: text("password").notNull(),
   role: text("role").notNull(),
   divisi: text("divisi"),
+  boardPosition: text("board_position"),
 });
 
 export const agenda = sqliteTable("agenda", {
@@ -54,6 +55,32 @@ export const memorandum = sqliteTable("memorandum", {
   signedAt: text("signed_at"),
   sentToSekdireksiAt: text("sent_to_sekdireksi_at"),
   receivedBySekdireksiAt: text("received_by_sekdireksi_at"),
+  sentToSekkomAt: text("sent_to_sekkom_at"),
+  receivedBySekkomAt: text("received_by_sekkom_at"),
+  routeType: text("route_type"),
+  targetMemberIds: text("target_member_ids"),
+  boardDecision: text("board_decision"),
+  disposition: text("disposition"),
+  returnToPengusulComment: text("return_to_pengusul_comment"),
+  returnedToPengusulAt: text("returned_to_pengusul_at"),
+  createdAt: text("created_at").notNull(),
+});
+
+export const memorandumApprovals = sqliteTable("memorandum_approvals", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  memorandumId: integer("memorandum_id")
+    .notNull()
+    .references(() => memorandum.id),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id),
+  role: text("role").notNull(),
+  stage: text("stage").notNull(),
+  decision: text("decision"),
+  comment: text("comment"),
+  disposition: text("disposition"),
+  signatureData: text("signature_data"),
+  actedAt: text("acted_at"),
   createdAt: text("created_at").notNull(),
 });
 
@@ -144,4 +171,12 @@ export type KnowledgeDocument = typeof knowledgeDocuments.$inferSelect;
 export type RegulatoryNotification = typeof regulatoryNotifications.$inferSelect;
 export type SlaRecord = typeof slaRecords.$inferSelect;
 
-export type UserRole = "pengusul" | "pimpinan_bidang" | "corpsec" | "sekdireksi";
+export type MemorandumApproval = typeof memorandumApprovals.$inferSelect;
+export type UserRole =
+  | "pengusul"
+  | "corpsec"
+  | "pimpinan_bidang"
+  | "sekdireksi"
+  | "sekretaris_komisaris"
+  | "direksi"
+  | "komisaris";

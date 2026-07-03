@@ -4,7 +4,7 @@ import { Header } from "@/components/layout/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { ReadIndicator } from "@/components/memorandum/ReadIndicator";
-import { MemorandumActions } from "@/components/memorandum/MemorandumActions";
+import { MemorandumWorkflowPanel } from "@/components/memorandum/MemorandumWorkflowPanel";
 import { getPimpinanMemorandum } from "@/lib/db/queries";
 import { MEMORANDUM_STATUS, URGENCY } from "@/lib/constants";
 import { formatDate, daysSince } from "@/lib/utils";
@@ -115,7 +115,7 @@ export default async function PimpinanBidangPage() {
                         {memo.submittedAt && `Diajukan ${formatDate(memo.submittedAt)}`}
                       </div>
                       <Link
-                        href={`/dashboard/memorandum/${memo.id}`}
+                        href={`/pimpinan-bidang/${memo.id}`}
                         className="text-xs font-medium text-emerald-700 hover:underline"
                       >
                         Lihat detail →

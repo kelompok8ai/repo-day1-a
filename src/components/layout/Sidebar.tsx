@@ -18,6 +18,7 @@ import {
   Upload,
   Plus,
   Inbox,
+  Gavel,
   LogOut,
 } from "lucide-react";
 import { useState } from "react";
@@ -39,6 +40,7 @@ const iconMap = {
   Upload,
   Plus,
   Inbox,
+  Gavel,
 };
 
 export function Sidebar({ session }: { session: SessionUser }) {

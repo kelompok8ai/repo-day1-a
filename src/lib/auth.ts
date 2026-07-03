@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import type { UserRole } from "./roles";
+import type { UserRole } from "./db/schema";
 
 export const SESSION_COOKIE = "corpsec_session";
 
@@ -9,6 +9,7 @@ export type SessionUser = {
   username: string;
   role: UserRole;
   divisi: string | null;
+  boardPosition?: string | null;
 };
 
 export async function getSession(): Promise<SessionUser | null> {

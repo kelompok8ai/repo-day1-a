@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { SESSION_COOKIE } from "@/lib/auth";
-import { canAccessRoute, ROLE_HOME, type UserRole } from "@/lib/roles";
+import type { UserRole } from "@/lib/db/schema";
+import { canAccessRoute, ROLE_HOME } from "@/lib/roles";
 
 const PUBLIC_PATHS = ["/login", "/api/auth/login", "/api/auth/logout"];
 
