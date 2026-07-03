@@ -23,29 +23,47 @@ ROOT = Path(__file__).resolve().parent.parent
 OUTPUT = ROOT / "CorpSec-Bank-Sumut-Presentasi.pptx"
 SCREENSHOTS = ROOT / "docs" / "screenshots"
 LOGO = ROOT / "docs" / "logo-banksumut.png"
+LOGO_OFFICIAL = ROOT / "docs" / "logo-banksumut-official.png"
+LOGO_RATIO = 320 / 117  # lebar / tinggi logo resmi Bank Sumut
 
 
 def ensure_logo():
-    """Convert SVG logo to PNG if needed."""
-    if LOGO.exists():
-        return
-    svg = ROOT / "public" / "images" / "logo-banksumut.svg"
-    if not svg.exists():
+    """Pastikan logo resmi Bank Sumut tersedia."""
+    if LOGO.exists() or LOGO_OFFICIAL.exists():
         return
     try:
-        import cairosvg
-        cairosvg.svg2png(url=str(svg), write_to=str(LOGO), output_width=240, output_height=240)
+        import urllib.request
+        urllib.request.urlretrieve(
+            "https://banksumut.co.id/wp-content/uploads/2019/04/logo-1.png",
+            LOGO_OFFICIAL,
+        )
     except Exception:
         pass
 
 
-def add_logo(slide, top=0.22, right=0.4, size=0.52):
-    """Bank Sumut logo — pojok kanan atas setiap slide."""
+def logo_path() -> Path | None:
     ensure_logo()
-    if not LOGO.exists():
+    if LOGO_OFFICIAL.exists():
+        return LOGO_OFFICIAL
+    if LOGO.exists():
+        return LOGO
+    return None
+
+
+def place_logo(slide, left: float, top: float, height: float):
+    """Tempatkan logo resmi dengan proporsi landscape yang benar."""
+    path = logo_path()
+    if not path:
         return
-    left = 13.333 - right - size
-    slide.shapes.add_picture(str(LOGO), Inches(left), Inches(top), width=Inches(size), height=Inches(size))
+    width = height * LOGO_RATIO
+    slide.shapes.add_picture(str(path), Inches(left), Inches(top), width=Inches(width), height=Inches(height))
+
+
+def add_logo(slide, top=0.25, right=0.35, height=0.26):
+    """Logo kecil — pojok kanan atas setiap slide."""
+    width = height * LOGO_RATIO
+    left = 13.333 - right - width
+    place_logo(slide, left, top, height)
 
 
 def bg(slide, color):
@@ -60,10 +78,10 @@ def footer(slide, n: int):
     bar.line.fill.background()
 
     ensure_logo()
-    if LOGO.exists():
-        slide.shapes.add_picture(str(LOGO), Inches(0.18), Inches(7.06), width=Inches(0.34), height=Inches(0.34))
+    if logo_path():
+        place_logo(slide, 0.18, 7.09, 0.22)
 
-    l = slide.shapes.add_textbox(Inches(0.58), Inches(7.1), Inches(6), Inches(0.35))
+    l = slide.shapes.add_textbox(Inches(0.95), Inches(7.1), Inches(6), Inches(0.35))
     p = l.text_frame.paragraphs[0]
     p.text = "CorpSec Bank Sumut — Business Problem Canvas"
     p.font.size = Pt(11)
@@ -176,14 +194,8 @@ def cover(prs, n):
     p2.font.color.rgb = RGBColor(0xBC, 0xCD, 0xDC)
 
     ensure_logo()
-    if LOGO.exists():
-        s.shapes.add_picture(str(LOGO), Inches(0.7), Inches(0.55), width=Inches(0.75), height=Inches(0.75))
-        brand = s.shapes.add_textbox(Inches(1.6), Inches(0.62), Inches(4), Inches(0.6))
-        p = brand.text_frame.paragraphs[0]
-        p.text = "Bank Sumut"
-        p.font.size = Pt(18)
-        p.font.bold = True
-        p.font.color.rgb = WHITE
+    if logo_path():
+        place_logo(s, 0.55, 0.45, 0.32)
 
     footer(s, n)
 
@@ -455,14 +467,8 @@ def closing(prs, n):
     p.alignment = PP_ALIGN.CENTER
 
     ensure_logo()
-    if LOGO.exists():
-        s.shapes.add_picture(str(LOGO), Inches(0.7), Inches(0.55), width=Inches(0.75), height=Inches(0.75))
-        brand = s.shapes.add_textbox(Inches(1.6), Inches(0.62), Inches(4), Inches(0.6))
-        p = brand.text_frame.paragraphs[0]
-        p.text = "Bank Sumut"
-        p.font.size = Pt(18)
-        p.font.bold = True
-        p.font.color.rgb = WHITE
+    if logo_path():
+        place_logo(s, 0.55, 0.45, 0.32)
 
     footer(s, n)
 
