@@ -235,19 +235,13 @@ def prd_summary(prs, n):
     footer(s, n)
 
 
-def app_overview(prs, n):
+def app_features_benefits(prs, n):
+    """Fitur utama & nilai manfaat — tanpa teks tampilan, itu pakai screenshot."""
     s = prs.slides.add_slide(prs.slide_layouts[6])
     bg(s, BG)
-    title_block(s, "Aplikasi yang Dibuat", "Platform web CorpSec Bank Sumut — ringkasan singkat")
+    title_block(s, "Fitur Utama & Nilai Manfaat", "Ringkasan kemampuan aplikasi CorpSec Bank Sumut")
 
-    card(s, 0.45, 1.45, 3.85, 4.9, "Tampilan Depan", [
-        "Halaman login dengan gambar gedung Bank Sumut",
-        "Warna navy & oranye sesuai branding bank",
-        "Sidebar per role — menu sesuai tugas masing-masing",
-        "Dashboard dengan banner, statistik, & grafik",
-        "Tampilan bersih, mudah dibaca, responsif",
-    ])
-    card(s, 4.55, 1.45, 3.85, 4.9, "Fitur Utama", [
+    card(s, 0.45, 1.45, 5.9, 5.0, "Fitur Utama", [
         "Upload & kelola memorandum PDF",
         "Alur persetujuan 7 tahap",
         "Bantuan rangkum isi memorandum",
@@ -255,15 +249,47 @@ def app_overview(prs, n):
         "Agenda Direksi, rapat, media, arsip dokumen",
         "Pemantauan SLA & laporan KPI",
     ])
-    card(s, 8.65, 1.45, 3.85, 4.9, "Nilai Manfaat", [
+    card(s, 6.85, 1.45, 5.9, 5.0, "Nilai Manfaat", [
         "Proses lebih cepat & terlacak",
         "Mengurangi kertas & duplikasi data",
         "Keputusan lebih terdokumentasi",
         "CorpSec punya dashboard terpusat",
         "Setiap role hanya lihat tugasnya",
         "Siap demo untuk evaluasi internal",
-    ])
+    ], header_color=ORANGE)
 
+    footer(s, n)
+
+
+def add_image_with_label(slide, img_path: Path, label: str, x, y, w, h, label_size=13):
+    """Add screenshot with rounded frame and caption."""
+    if not img_path.exists():
+        return
+    frame = slide.shapes.add_shape(
+        MSO_SHAPE.ROUNDED_RECTANGLE, Inches(x - 0.06), Inches(y - 0.06), Inches(w + 0.12), Inches(h + 0.42)
+    )
+    frame.fill.solid()
+    frame.fill.fore_color.rgb = WHITE
+    frame.line.color.rgb = RGBColor(0xE2, 0xE8, 0xF0)
+
+    slide.shapes.add_picture(str(img_path), Inches(x), Inches(y), width=Inches(w), height=Inches(h))
+
+    cap = slide.shapes.add_textbox(Inches(x), Inches(y + h + 0.04), Inches(w), Inches(0.32))
+    p = cap.text_frame.paragraphs[0]
+    p.text = label
+    p.font.size = Pt(label_size)
+    p.font.bold = True
+    p.font.color.rgb = NAVY
+    p.alignment = PP_ALIGN.CENTER
+
+
+def website_display_slide(prs, n: int, title: str, subtitle: str, images: list[tuple[str, str, float, float, float, float]]):
+    """Slide khusus tampilan website — dominan gambar, bukan teks."""
+    s = prs.slides.add_slide(prs.slide_layouts[6])
+    bg(s, BG)
+    title_block(s, title, subtitle)
+    for filename, label, x, y, w, h in images:
+        add_image_with_label(s, SCREENSHOTS / filename, label, x, y, w, h)
     footer(s, n)
 
 
@@ -358,38 +384,6 @@ def roadmap(prs, n):
     footer(s, n)
 
 
-def add_image_with_label(slide, img_path: Path, label: str, x, y, w, h):
-    """Add screenshot with rounded frame and caption."""
-    if not img_path.exists():
-        return
-    frame = slide.shapes.add_shape(
-        MSO_SHAPE.ROUNDED_RECTANGLE, Inches(x - 0.05), Inches(y - 0.05), Inches(w + 0.1), Inches(h + 0.45)
-    )
-    frame.fill.solid()
-    frame.fill.fore_color.rgb = WHITE
-    frame.line.color.rgb = RGBColor(0xE2, 0xE8, 0xF0)
-
-    slide.shapes.add_picture(str(img_path), Inches(x), Inches(y), width=Inches(w), height=Inches(h))
-
-    cap = slide.shapes.add_textbox(Inches(x), Inches(y + h + 0.05), Inches(w), Inches(0.35))
-    p = cap.text_frame.paragraphs[0]
-    p.text = label
-    p.font.size = Pt(13)
-    p.font.bold = True
-    p.font.color.rgb = NAVY
-    p.alignment = PP_ALIGN.CENTER
-
-
-def mockup_slide(prs, n: int, title: str, subtitle: str, images: list[tuple[str, str, float, float, float, float]]):
-    """Slide with multiple screenshot mockups. Each item: (filename, label, x, y, w, h)."""
-    s = prs.slides.add_slide(prs.slide_layouts[6])
-    bg(s, BG)
-    title_block(s, title, subtitle)
-    for filename, label, x, y, w, h in images:
-        add_image_with_label(s, SCREENSHOTS / filename, label, x, y, w, h)
-    footer(s, n)
-
-
 def closing(prs, n):
     s = prs.slides.add_slide(prs.slide_layouts[6])
     bg(s, NAVY)
@@ -431,23 +425,26 @@ def build():
     cover(prs, 1)
     canvas_problems(prs, 2)
     prd_summary(prs, 3)
-    app_overview(prs, 4)
 
-    # Mockup screenshots from live website
-    mockup_slide(prs, 5, "Mockup — Halaman Login & Dashboard", "Tampilan depan dan pusat kendali CorpSec", [
-        ("01-login.png", "Halaman Login", 0.45, 1.45, 5.9, 3.35),
-        ("02-dashboard.png", "Dashboard Corporate Secretary", 6.85, 1.45, 5.9, 3.35),
+    # Tampilan website — screenshot asli, bukan teks
+    website_display_slide(prs, 4, "Tampilan Website", "Halaman Login — pintu masuk aplikasi CorpSec Bank Sumut", [
+        ("01-login.png", "Halaman Login", 1.2, 1.35, 10.9, 4.55),
     ])
-    mockup_slide(prs, 6, "Mockup — Memorandum & Divisi Pengusul", "Modul utama pengelolaan dokumen", [
-        ("03-memorandum.png", "Manajemen Memorandum", 0.45, 1.45, 5.9, 3.35),
-        ("04-pengusul.png", "Beranda Divisi Pengusul", 6.85, 1.45, 5.9, 3.35),
+    website_display_slide(prs, 5, "Tampilan Website", "Dashboard Corporate Secretary — ringkasan operasional harian", [
+        ("02-dashboard.png", "Dashboard CorpSec", 0.45, 1.35, 12.2, 4.55),
     ])
-    mockup_slide(prs, 7, "Mockup — Review & Agenda", "Tampilan Pemimpin Bidang dan Agenda Direksi", [
-        ("05-pimpinan.png", "Review Memorandum — Pimpinan Bidang", 0.45, 1.45, 5.9, 3.35),
-        ("06-agenda.png", "Manajemen Agenda Direksi", 6.85, 1.45, 5.9, 3.35),
+    website_display_slide(prs, 6, "Tampilan Website", "Modul Memorandum & Portal Divisi Pengusul", [
+        ("03-memorandum.png", "Manajemen Memorandum", 0.45, 1.35, 5.9, 4.55),
+        ("04-pengusul.png", "Beranda Divisi Pengusul", 6.85, 1.35, 5.9, 4.55),
+    ])
+    website_display_slide(prs, 7, "Tampilan Website", "Review Pimpinan Bidang & Agenda Direksi", [
+        ("05-pimpinan.png", "Review Memorandum — Pimpinan Bidang", 0.45, 1.35, 5.9, 4.55),
+        ("06-agenda.png", "Manajemen Agenda Direksi", 6.85, 1.35, 5.9, 4.55),
     ])
 
-    content(prs, 8, "Modul Sistem", "Delapan modul operasional dalam satu platform", [
+    app_features_benefits(prs, 8)
+
+    content(prs, 9, "Modul Sistem", "Delapan modul operasional dalam satu platform", [
         "Dashboard — ringkasan harian CorpSec (agenda, memo, SLA, notifikasi)",
         "Memorandum — upload PDF, tinjauan, workflow 7 level, tanda tangan",
         "Agenda Direksi — jadwal kegiatan & catatan persiapan",
@@ -457,7 +454,7 @@ def build():
         "SLA Monitoring — pantau target waktu ≥ 95%",
         "Laporan — statistik & KPI success metrics PRD",
     ], size=19)
-    content(prs, 9, "Alur Kerja Memorandum", "7 tahap persetujuan sesuai PRD", [
+    content(prs, 10, "Alur Kerja Memorandum", "7 tahap persetujuan sesuai PRD", [
         "1. Divisi Pengusul — kirim memorandum PDF",
         "2. Corporate Secretary — terima, rangkum, & tinjau kelengkapan",
         "3. Pemimpin Bidang — setujui atau tolak + tanda tangan",
@@ -466,10 +463,10 @@ def build():
         "6. CorpSec — finalisasi sesuai keputusan board",
         "7. Kembali ke Pengusul — pemberitahuan hasil akhir",
     ], size=20)
-    ux_slide(prs, 10)
-    security_slide(prs, 11)
-    roadmap(prs, 12)
-    closing(prs, 13)
+    ux_slide(prs, 11)
+    security_slide(prs, 12)
+    roadmap(prs, 13)
+    closing(prs, 14)
 
     return prs
 
