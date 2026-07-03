@@ -24,6 +24,7 @@ export function seedDatabase(db: BetterSQLite3Database<typeof schema>) {
   db.insert(schema.users).values([
     { name: "Drs. Ahmad Wijaya", email: "ahmad.wijaya@banksumut.co.id", role: "Direksi" },
     { name: "Siti Rahayu, SE", email: "siti.rahayu@banksumut.co.id", role: "Corporate Secretary" },
+    { name: "Ir. Hendra Gunawan", email: "hendra.gunawan@banksumut.co.id", role: "Pemimpin Bidang Corporate Secretary" },
     { name: "Budi Santoso", email: "budi.santoso@banksumut.co.id", role: "Sekretaris Direksi" },
     { name: "Maya Putri", email: "maya.putri@banksumut.co.id", role: "Protokoler Officer" },
   ]).run();

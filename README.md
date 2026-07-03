@@ -6,7 +6,9 @@ Aplikasi **Corporate Secretary Bank Sumut** berbasis Next.js dan SQLite, mengimp
 
 - **Dashboard Direksi** — agenda hari ini/minggu ini, memorandum pending, notifikasi regulator, grafik statistik
 - **Manajemen Agenda** — CRUD jadwal kegiatan Direksi
-- **Manajemen Memorandum** — alur workflow, AI executive summary, risk & compliance score
+- **Manajemen Memorandum** — upload scan/file, analisa AI (SMD + regulasi), edit review, workflow CorpSec → Pimpinan Bidang
+- **Menu Pimpinan Bidang** — approve + tanda tangan digital, tolak + komentar revisi
+- **Indikator baca** — titik merah (belum dibaca) / hijau (sudah dibaca)
 - **Meeting Management** — rapat dan tindak lanjut
 - **Media Monitoring** — berita Bank Sumut, regulasi, industri perbankan
 - **Knowledge Base** — dokumen internal (SK, SE, SOP) dan regulasi eksternal (OJK, BI)

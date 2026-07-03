@@ -1,5 +1,12 @@
 import { NextResponse } from "next/server";
-import { generateAiSummary, updateMemorandumStatus } from "@/lib/db/queries";
+import {
+  generateAiSummary,
+  updateAiReview,
+  sendToPimpinanBidang,
+  approveWithSignature,
+  rejectWithComment,
+  getMemorandumById,
+} from "@/lib/db/queries";
 
 export const runtime = "nodejs";
 
@@ -8,7 +15,8 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const { action } = await request.json();
+  const body = await request.json();
+  const { action } = body;
   const memoId = Number(id);
 
   switch (action) {
@@ -16,19 +24,41 @@ export async function PATCH(
       const result = generateAiSummary(memoId);
       return NextResponse.json(result);
     }
-    case "approve": {
-      const result = updateMemorandumStatus(memoId, "approved");
+    case "update_ai_review": {
+      const result = updateAiReview(memoId, {
+        aiSummary: body.aiSummary,
+        aiRiskScore: body.aiRiskScore,
+        aiComplianceScore: body.aiComplianceScore,
+      });
       return NextResponse.json(result);
     }
-    case "reject": {
-      const result = updateMemorandumStatus(memoId, "rejected");
+    case "send_to_pimpinan": {
+      const result = sendToPimpinanBidang(memoId);
       return NextResponse.json(result);
     }
-    case "sign": {
-      const result = updateMemorandumStatus(memoId, "signed");
+    case "approve_sign": {
+      const result = approveWithSignature(
+        memoId,
+        body.signatureData,
+        body.signedBy ?? "Pemimpin Bidang"
+      );
+      return NextResponse.json(result);
+    }
+    case "reject_with_comment": {
+      const result = rejectWithComment(memoId, body.comment ?? "");
       return NextResponse.json(result);
     }
     default:
       return NextResponse.json({ error: "Invalid action" }, { status: 400 });
   }
+}
+
+export async function GET(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  const memo = getMemorandumById(Number(id));
+  if (!memo) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  return NextResponse.json(memo);
 }

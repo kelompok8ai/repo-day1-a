@@ -1,7 +1,12 @@
-import { eq, and, gte, lte, desc, count, sql } from "drizzle-orm";
+import { eq, and, gte, lte, desc, count, sql, inArray } from "drizzle-orm";
 import { getDb } from "./index";
 import * as schema from "./schema";
 import { getToday, getWeekRange } from "../utils";
+import { buildAiAnalysis } from "../ai-analysis";
+import { readMemorandumFileAsText } from "../storage";
+
+const PIMPINAN_STATUSES = ["pimpinan_review", "pending_approval"];
+const ACTIVE_STATUSES = sql`${schema.memorandum.status} NOT IN ('approved', 'rejected', 'signed')`;
 
 export function getDashboardStats() {
   const db = getDb();
@@ -25,25 +30,28 @@ export function getDashboardStats() {
   const pendingMemos = db
     .select()
     .from(schema.memorandum)
-    .where(eq(schema.memorandum.status, "pending_approval"))
+    .where(inArray(schema.memorandum.status, PIMPINAN_STATUSES))
     .orderBy(desc(schema.memorandum.submittedAt))
     .all();
 
   const highUrgencyMemos = db
     .select()
     .from(schema.memorandum)
-    .where(
-      and(
-        eq(schema.memorandum.urgency, "high"),
-        sql`${schema.memorandum.status} NOT IN ('approved', 'rejected', 'signed')`
-      )
-    )
+    .where(and(eq(schema.memorandum.urgency, "high"), ACTIVE_STATUSES))
     .all();
 
   const aiReviewMemos = db
     .select()
     .from(schema.memorandum)
-    .where(eq(schema.memorandum.status, "ai_review"))
+    .where(
+      inArray(schema.memorandum.status, ["ai_review", "uploaded"])
+    )
+    .all();
+
+  const unreadMemos = db
+    .select()
+    .from(schema.memorandum)
+    .where(eq(schema.memorandum.isRead, false))
     .all();
 
   const bankNews = db
@@ -88,11 +96,12 @@ export function getDashboardStats() {
 
   const memoStats = {
     total: allMemos.length,
-    pending: allMemos.filter((m) => m.status === "pending_approval").length,
-    approved: allMemos.filter((m) => m.status === "approved").length,
+    pending: allMemos.filter((m) => PIMPINAN_STATUSES.includes(m.status)).length,
+    approved: allMemos.filter((m) => m.status === "approved" || m.status === "signed").length,
     rejected: allMemos.filter((m) => m.status === "rejected").length,
-    aiReview: allMemos.filter((m) => m.status === "ai_review").length,
+    aiReview: allMemos.filter((m) => ["ai_review", "uploaded"].includes(m.status)).length,
     highUrgency: allMemos.filter((m) => m.urgency === "high").length,
+    unread: unreadMemos.length,
   };
 
   const slaOnTrack = slaRecords.filter((s) => s.status === "on_track").length;
@@ -101,8 +110,8 @@ export function getDashboardStats() {
     : 100;
 
   const memoByStatus = [
-    { name: "Menunggu", value: memoStats.pending, fill: "#f59e0b" },
-    { name: "Review AI", value: memoStats.aiReview, fill: "#a855f7" },
+    { name: "Review Pimpinan", value: memoStats.pending, fill: "#f59e0b" },
+    { name: "Analisa AI", value: memoStats.aiReview, fill: "#a855f7" },
     { name: "Disetujui", value: memoStats.approved, fill: "#10b981" },
     { name: "Ditolak", value: memoStats.rejected, fill: "#ef4444" },
   ];
@@ -133,6 +142,7 @@ export function getDashboardStats() {
     pendingMemos,
     highUrgencyMemos,
     aiReviewMemos,
+    unreadMemos,
     bankNews,
     mediaSummary,
     regulatoryNotifs,
@@ -156,9 +166,29 @@ export function getAllMemorandum() {
   return db.select().from(schema.memorandum).orderBy(desc(schema.memorandum.createdAt)).all();
 }
 
+export function getPimpinanMemorandum() {
+  const db = getDb();
+  return db
+    .select()
+    .from(schema.memorandum)
+    .where(inArray(schema.memorandum.status, PIMPINAN_STATUSES))
+    .orderBy(desc(schema.memorandum.submittedAt))
+    .all();
+}
+
 export function getMemorandumById(id: number) {
   const db = getDb();
   return db.select().from(schema.memorandum).where(eq(schema.memorandum.id, id)).get();
+}
+
+export function markMemorandumRead(id: number) {
+  const db = getDb();
+  return db
+    .update(schema.memorandum)
+    .set({ isRead: true })
+    .where(eq(schema.memorandum.id, id))
+    .returning()
+    .get();
 }
 
 export function getAllMeetings() {
@@ -236,10 +266,11 @@ export function getReportData() {
 
   return {
     memoByStatus: [
-      { status: "Draft", count: memos.filter((m) => m.status === "draft").length },
-      { status: "Review AI", count: memos.filter((m) => m.status === "ai_review").length },
-      { status: "Menunggu", count: memos.filter((m) => m.status === "pending_approval").length },
-      { status: "Disetujui", count: memos.filter((m) => m.status === "approved").length },
+      { status: "Upload", count: memos.filter((m) => m.status === "uploaded").length },
+      { status: "Analisa AI", count: memos.filter((m) => m.status === "ai_review").length },
+      { status: "Review CorpSec", count: memos.filter((m) => ["corpsec_review", "returned_to_corpsec"].includes(m.status)).length },
+      { status: "Pimpinan Bidang", count: memos.filter((m) => PIMPINAN_STATUSES.includes(m.status)).length },
+      { status: "Disetujui", count: memos.filter((m) => m.status === "approved" || m.status === "signed").length },
       { status: "Ditolak", count: memos.filter((m) => m.status === "rejected").length },
     ],
     memoByDivisi: Object.entries(
@@ -283,12 +314,9 @@ export function createMemorandum(data: typeof schema.memorandum.$inferInsert) {
   return db.insert(schema.memorandum).values(data).returning().get();
 }
 
-export function updateMemorandumStatus(id: number, status: string) {
+export function updateMemorandum(id: number, data: Partial<typeof schema.memorandum.$inferInsert>) {
   const db = getDb();
-  const updates: Partial<typeof schema.memorandum.$inferInsert> = { status };
-  if (status === "approved") updates.approvedAt = new Date().toISOString();
-  if (status === "signed") updates.signedAt = new Date().toISOString();
-  return db.update(schema.memorandum).set(updates).where(eq(schema.memorandum.id, id)).returning().get();
+  return db.update(schema.memorandum).set(data).where(eq(schema.memorandum.id, id)).returning().get();
 }
 
 export function generateAiSummary(id: number) {
@@ -296,19 +324,98 @@ export function generateAiSummary(id: number) {
   const memo = getMemorandumById(id);
   if (!memo) return null;
 
-  const summary = `Ringkasan AI: ${memo.title}. Divisi pengusul: ${memo.proposerDivisi}. Analisis menunjukkan memorandum ini memerlui review compliance terhadap regulasi OJK dan kebijakan internal Bank Sumut. Confidence score: 85%.`;
-  const riskScore = Math.floor(Math.random() * 40) + 20;
-  const complianceScore = Math.floor(Math.random() * 15) + 80;
+  const knowledgeDocs = db.select().from(schema.knowledgeDocuments).all();
+  const fileContent = memo.filePath ? readMemorandumFileAsText(memo.filePath) : null;
+  const analysis = buildAiAnalysis(memo, knowledgeDocs, fileContent);
 
   return db
     .update(schema.memorandum)
     .set({
-      aiSummary: summary,
-      aiRiskScore: riskScore,
-      aiComplianceScore: complianceScore,
-      aiConfidence: 85,
-      status: "pending_approval",
+      aiSummary: analysis.aiSummary,
+      aiRiskScore: analysis.aiRiskScore,
+      aiComplianceScore: analysis.aiComplianceScore,
+      aiConfidence: analysis.aiConfidence,
+      smdDocumentId: analysis.smdDocumentId,
+      regulatoryReferences: analysis.regulatoryReferences,
+      status: "corpsec_review",
+      isRead: false,
     })
+    .where(eq(schema.memorandum.id, id))
+    .returning()
+    .get();
+}
+
+export function updateAiReview(
+  id: number,
+  data: {
+    aiSummary: string;
+    aiRiskScore?: number;
+    aiComplianceScore?: number;
+  }
+) {
+  const db = getDb();
+  return db
+    .update(schema.memorandum)
+    .set({
+      aiSummary: data.aiSummary,
+      aiRiskScore: data.aiRiskScore,
+      aiComplianceScore: data.aiComplianceScore,
+      aiSummaryEdited: true,
+    })
+    .where(eq(schema.memorandum.id, id))
+    .returning()
+    .get();
+}
+
+export function sendToPimpinanBidang(id: number) {
+  const db = getDb();
+  return db
+    .update(schema.memorandum)
+    .set({ status: "pimpinan_review", isRead: false })
+    .where(eq(schema.memorandum.id, id))
+    .returning()
+    .get();
+}
+
+export function approveWithSignature(
+  id: number,
+  signatureData: string,
+  signedBy: string
+) {
+  const db = getDb();
+  return db
+    .update(schema.memorandum)
+    .set({
+      status: "approved",
+      signatureData,
+      signedBy,
+      approvedAt: new Date().toISOString(),
+      signedAt: new Date().toISOString(),
+    })
+    .where(eq(schema.memorandum.id, id))
+    .returning()
+    .get();
+}
+
+export function rejectWithComment(id: number, comment: string) {
+  const db = getDb();
+  return db
+    .update(schema.memorandum)
+    .set({
+      status: "returned_to_corpsec",
+      rejectionComment: comment,
+      isRead: false,
+    })
+    .where(eq(schema.memorandum.id, id))
+    .returning()
+    .get();
+}
+
+export function submitBackToCorpsec(id: number) {
+  const db = getDb();
+  return db
+    .update(schema.memorandum)
+    .set({ status: "returned_to_corpsec", isRead: false })
     .where(eq(schema.memorandum.id, id))
     .returning()
     .get();

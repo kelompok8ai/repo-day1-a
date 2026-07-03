@@ -14,6 +14,7 @@ import {
   Building2,
   Menu,
   X,
+  UserCheck,
 } from "lucide-react";
 import { useState } from "react";
 import { APP_NAME, NAV_ITEMS } from "@/lib/constants";
@@ -28,6 +29,7 @@ const iconMap = {
   BookOpen,
   Clock,
   BarChart3,
+  UserCheck,
 };
 
 export function Sidebar() {
